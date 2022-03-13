@@ -5,8 +5,19 @@ import Navbar from "~/components/Navbar.vue";
 <template>
   <div class="min-h-screen">
     <Navbar />
-    <router-view />
+    <Transition name="fade" mode="out-in">
+      <router-view />
+    </Transition>
   </div>
 </template>
 
-<style></style>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: transform 0.25s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  transform: translateY(-1rem);
+}
+</style>

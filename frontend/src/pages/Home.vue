@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import HeaderCard from "~/components/HeaderCard.vue";
+import PrimaryButton from "../components/PrimaryButton.vue";
 </script>
 
 <template>
@@ -10,5 +11,11 @@ import HeaderCard from "~/components/HeaderCard.vue";
         Transitioning organizations towards decentralization
       </p>
     </HeaderCard>
+
+    <div class="p-10">
+      <router-link to="/create/dao">
+        <PrimaryButton> Create a DAO </PrimaryButton>
+      </router-link>
+    </div>
   </div>
 </template>
