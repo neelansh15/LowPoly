@@ -13,13 +13,21 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  // We get the contract to deploy
-  const Token = await ethers.getContractFactory("MoneyGon");
-  const token = await Token.deploy();
+  // DEPLOY TOKEN
+  // const Token = await ethers.getContractFactory("MoneyGon");
+  // const token = await Token.deploy();
 
-  await token.deployed();
+  // await token.deployed();
 
-  console.log("token deployed to:", token.address);
+  // console.log("token deployed to:", token.address);
+
+  // DEPLOY DAO
+  const DAO = await ethers.getContractFactory("DAO");
+  const dao = await DAO.deploy("0xf145192Db921b0e2A6699748eD3630b956b6CD19");
+
+  await dao.deployed();
+
+  console.log("dao deployed to:", dao.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
