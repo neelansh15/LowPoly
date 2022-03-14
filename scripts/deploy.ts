@@ -16,7 +16,7 @@ async function main() {
 
   // DEPLOY TOKEN
   const Token = await ethers.getContractFactory("Token");
-  const token = await Token.deploy("TestToken", "TT");
+  const token = await Token.deploy("TestToken2", "TT2");
 
   await token.deployed();
 

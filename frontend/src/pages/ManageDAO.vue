@@ -3,6 +3,7 @@ import { onMounted, reactive } from "vue";
 import { ethers } from "ethers";
 import HeaderCard from "~/components/HeaderCard.vue";
 import tokenData from "../../../abis/token.json";
+import { useTokenContract } from "~/utils/useContract";
 
 onMounted(init);
 
@@ -13,12 +14,7 @@ const tokenInfo = reactive({
 });
 
 async function init() {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const tokenContract = new ethers.Contract(
-    tokenData.address,
-    tokenData.abi,
-    provider
-  );
+  const tokenContract = useTokenContract(tokenData.address);
   tokenInfo.name = await tokenContract.name();
   tokenInfo.symbol = await tokenContract.symbol();
   tokenInfo.decimals = await tokenContract.decimals();
