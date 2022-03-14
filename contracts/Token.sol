@@ -7,11 +7,15 @@ import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 
 contract Token is ERC20, Ownable, ERC20Permit, ERC20Votes {
+
+    address private _factory;
+
     constructor(string memory _name, string memory _symbol)
         ERC20(_name, _symbol)
         ERC20Permit(_name)
     {
         // _mint(msg.sender, 1000000 * 10**decimals());
+        _factory = msg.sender;
     }
 
     function mint(address to, uint256 amount) public onlyOwner {

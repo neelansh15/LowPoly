@@ -20,19 +20,25 @@ async function main() {
 
   await token.deployed();
 
-  const data = {
+  const tokenData = {
     address: token.address,
     abi: JSON.parse(token.interface.format("json") as string),
   };
-  writeFileSync("./abis/token.json", JSON.stringify(data));
+  writeFileSync("./abis/token.json", JSON.stringify(tokenData));
 
   console.log("token deployed to:", token.address);
 
-  // DEPLOY DAO
+  // DEPLOY DAO (for testing, actually need only LowPoly contract)
   // const DAO = await ethers.getContractFactory("DAO");
   // const dao = await DAO.deploy("0xf145192Db921b0e2A6699748eD3630b956b6CD19");
 
   // await dao.deployed();
+
+  // const daoData = {
+  //   address: dao.address,
+  //   abi: JSON.parse(dao.interface.format("json") as string),
+  // };
+  // writeFileSync("./abis/dao.json", JSON.stringify(daoData));
 
   // console.log("dao deployed to:", dao.address);
 }
