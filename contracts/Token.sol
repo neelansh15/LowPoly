@@ -6,9 +6,12 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 
-contract MoneyGon is ERC20, Ownable, ERC20Permit, ERC20Votes {
-    constructor() ERC20("MoneyGon", "MGON") ERC20Permit("MoneyGon") {
-        _mint(msg.sender, 1000000 * 10**decimals());
+contract Token is ERC20, Ownable, ERC20Permit, ERC20Votes {
+    constructor(string memory _name, string memory _symbol)
+        ERC20(_name, _symbol)
+        ERC20Permit(_name)
+    {
+        // _mint(msg.sender, 1000000 * 10**decimals());
     }
 
     function mint(address to, uint256 amount) public onlyOwner {
