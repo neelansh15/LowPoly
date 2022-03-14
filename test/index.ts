@@ -8,3 +8,15 @@ describe("DAO", function () {
     await dao.deployed();
   });
 });
+
+describe("Token", function () {
+  it("Should deploy token", async function () {
+    const Token = await ethers.getContractFactory("Token");
+
+    const name = "TestToken";
+    const symbol = "TT";
+
+    const token = await Token.deploy(name, symbol);
+    await token.deployed();
+  });
+});
