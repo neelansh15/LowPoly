@@ -8,13 +8,13 @@
 <script setup lang="ts">
 import { ethers } from "ethers";
 import { ref } from "vue";
-import { useWalletStore } from "../stores/wallet";
+import { useWeb3Store } from "../stores/web3Store";
 
 const walletConnected = ref(false);
 const address = ref("");
 
 async function connectWallet() {
-  const wallet = useWalletStore();
+  const wallet = useWeb3Store();
 
   const provider = window.ethereum;
 
@@ -44,10 +44,7 @@ async function connectWallet() {
   // });
 
   let balance = web3Provider.getBalance(address.value);
-  wallet.$state = {
-    chainId: chainId,
-    address: address.value,
-  };
+  wallet.updateWeb3Wallet(chainId, address.value, web3Provider);
   walletConnected.value = true;
 }
 </script>
