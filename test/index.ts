@@ -3,8 +3,20 @@ import { ethers } from "hardhat";
 
 describe("DAO", function () {
   it("Should deploy", async function () {
+    const Token = await ethers.getContractFactory("Token");
+
+    const name = "TestToken";
+    const symbol = "TT";
+
+    const token = await Token.deploy(name, symbol);
+    await token.deployed();
+
+    await expect(await token.name()).to.equal(name);
+    await expect(await token.symbol()).to.equal(symbol);
+
     const DAO = await ethers.getContractFactory("DAO");
-    const dao = await DAO.deploy(ethers.constants.AddressZero);
-    await dao.deployed();
+    const dao1 = await DAO.deploy(token.address);
+    const dao2 = await dao1.deployed();
+    await dao2.votingDelay();
   });
 });

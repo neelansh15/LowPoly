@@ -4,6 +4,7 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 import { ethers } from "hardhat";
+import { writeFileSync } from "fs";
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -14,20 +15,26 @@ async function main() {
   // await hre.run('compile');
 
   // DEPLOY TOKEN
-  // const Token = await ethers.getContractFactory("MoneyGon");
-  // const token = await Token.deploy();
+  const Token = await ethers.getContractFactory("Token");
+  const token = await Token.deploy("TestToken2", "TT2");
 
-  // await token.deployed();
+  await token.deployed();
 
-  // console.log("token deployed to:", token.address);
+  const data = {
+    address: token.address,
+    abi: JSON.parse(token.interface.format("json") as string),
+  };
+  writeFileSync("./abis/token.json", JSON.stringify(data));
+
+  console.log("token deployed to:", token.address);
 
   // DEPLOY DAO
-  const DAO = await ethers.getContractFactory("DAO");
-  const dao = await DAO.deploy("0xf145192Db921b0e2A6699748eD3630b956b6CD19");
+  // const DAO = await ethers.getContractFactory("DAO");
+  // const dao = await DAO.deploy("0xf145192Db921b0e2A6699748eD3630b956b6CD19");
 
-  await dao.deployed();
+  // await dao.deployed();
 
-  console.log("dao deployed to:", dao.address);
+  // console.log("dao deployed to:", dao.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

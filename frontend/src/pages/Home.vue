@@ -16,6 +16,9 @@ import PrimaryButton from "../components/PrimaryButton.vue";
       <router-link to="/create/dao">
         <PrimaryButton> Create a DAO </PrimaryButton>
       </router-link>
+      <router-link to="/dao/manage">
+        <PrimaryButton> Manage a DAO </PrimaryButton>
+      </router-link>
     </div>
   </div>
 </template>
