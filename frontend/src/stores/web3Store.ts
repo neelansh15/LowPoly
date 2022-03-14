@@ -4,17 +4,17 @@ import { ethers } from "ethers";
 export const useWeb3Store = defineStore("web3", {
   state: () => {
     return {
-      chainId: -1,
-      address: "",
+      chainId: null as number | null,
+      address: null as string | null,
       web3provider: null as ethers.providers.Web3Provider | null,
     };
   },
 
   actions: {
     updateWeb3Wallet(
-      chainId: number,
-      address: string,
-      web3provider: ethers.providers.Web3Provider,
+      chainId: number | null,
+      address: string | null,
+      web3provider: ethers.providers.Web3Provider | null,
     ) {
       this.chainId = chainId;
       this.address = address;
