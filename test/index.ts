@@ -11,8 +11,8 @@ describe("DAO", function () {
     const token = await Token.deploy(name, symbol);
     await token.deployed();
 
-    expect(token.name()).to.equal(name);
-    expect(token.symbol()).to.equal(symbol);
+    await expect(await token.name()).to.equal(name);
+    await expect(await token.symbol()).to.equal(symbol);
 
     const DAO = await ethers.getContractFactory("DAO");
     const dao1 = await DAO.deploy(token.address);
