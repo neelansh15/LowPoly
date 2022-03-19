@@ -1,6 +1,6 @@
 <template>
-  <div v-if="walletConnected">
-    {{ address.slice(0, 6) + "..." + address.slice(12, 18) }}
+  <div v-if="walletConnected && address">
+    {{ address.slice(0, 5) + "..." + address.slice(38, 42) }}
   </div>
   <div v-else>
     <button @click="connectWallet">Connect to Wallet</button>
@@ -9,13 +9,15 @@
 
 <script setup lang="ts">
 import { ethers } from "ethers";
-import { emit } from "process";
-import { ref } from "vue";
+import { storeToRefs } from "pinia";
+import { computed, ref } from "vue";
 import { useWeb3Store } from "../stores/web3Store";
 
 const walletConnected = ref(false);
-const address = ref("");
-const chainId = ref(0);
+// const address = computed(() => useWeb3Store.ad);
+// const chainId = ref(0);
+
+const { address, chainId } = storeToRefs(useWeb3Store());
 
 async function connectWallet() {
   const wallet = useWeb3Store();
@@ -30,32 +32,41 @@ async function connectWallet() {
   await web3Provider.send("eth_requestAccounts", []);
 
   const network = await web3Provider.getNetwork();
-  chainId.value = network.chainId;
+  wallet.updateChainId(network.chainId);
   const signer = web3Provider.getSigner();
-  address.value = await signer.getAddress();
+  wallet.updateAddress(await signer.getAddress());
 
-  provider.on("accountsChanged", (accounts: string[]) => {
+  function accountsChanged(accounts: string[]) {
     if (accounts.length == 0) {
-      address.value = "";
       walletConnected.value = false;
+      wallet.updateAddress(null);
+      disconnect();
     } else {
-      address.value = accounts[0];
+      wallet.updateAddress(accounts[0]);
     }
-    console.log({ changeAccount: accounts });
-    wallet.updateAddress(address.value);
-  });
-  provider.on("disconnect", (event: any) => {
-    wallet.updateWeb3Wallet(null, null, null);
-  });
-  provider.on("chainChanged", (newChainId: string) => {
+  }
+
+  provider.on("accountsChanged", accountsChanged);
+
+  function chainChanged(newChainId: string) {
     newChainId = newChainId.split("x")[1];
-    chainId.value = parseInt(newChainId);
-    console.log({ changedChain: chainId.value });
-    wallet.updateChainId(chainId.value);
-  });
+    wallet.updateChainId(parseInt(newChainId));
+    console.log({ changedChain: chainId });
+  }
+  provider.on("chainChanged", chainChanged);
+
+  function disconnect() {
+    console.log("disconnecr");
+    wallet.updateWeb3Wallet(null, null, null);
+    provider.removeListener("accountsChanged", accountsChanged);
+    provider.removeListener("disconnect", disconnect);
+    provider.removeListener("chainChanged", chainChanged);
+  }
+
+  provider.on("disconnect", disconnect);
 
   // let balance = web3Provider.getBalance(address.value);
-  wallet.updateWeb3Wallet(chainId.value, address.value, web3Provider);
+  // wallet.updateWeb3Wallet(chainId.value, address.value, web3Provider);
   walletConnected.value = true;
 }
 </script>
