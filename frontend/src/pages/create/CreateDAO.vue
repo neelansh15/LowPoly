@@ -12,7 +12,20 @@ import SecondaryButton from "../../components/SecondaryButton.vue";
 
     <div class="p-10">
       <form @submit.prevent="">
-        <input type="text" placeholder="Name" />
+        <router-link to="/create/token">
+          <PrimaryButton> Create a token </PrimaryButton>
+        </router-link>
+        <p class="inline-block ml-3">OR</p>
+        <input class="space-x-2 ml-3" type="text" placeholder="Token address" />
+        <br />
+        <input class="mt-3 space-x-2" type="text" placeholder="Name" />
+        <br />
+        <textarea
+          box="border"
+          class="mt-3 space-x-2"
+          type="text"
+          placeholder="Describe what the DAO does"
+        />
         <div class="mt-3 space-x-2">
           <PrimaryButton>Create DAO</PrimaryButton>
           <SecondaryButton type="reset">Reset</SecondaryButton>
