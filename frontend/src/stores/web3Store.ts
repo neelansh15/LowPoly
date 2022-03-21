@@ -20,10 +20,10 @@ export const useWeb3Store = defineStore("web3", {
       this.address = address;
       this.web3provider = web3provider;
     },
-    updateAddress(address: string) {
+    updateAddress(address: string | null) {
       this.address = address;
     },
-    updateChainId(chainId: number) {
+    updateChainId(chainId: number | null) {
       this.chainId = chainId;
     },
   },
