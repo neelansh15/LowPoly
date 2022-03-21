@@ -10,11 +10,16 @@ contract LowPolyFactory {
     // Mapping of owner addresses to their created DAOs
     mapping(address => DAO[]) _daos;
 
+    // Make something payable to charge minting fees
     function createToken(string memory name, string memory symbol)
         public
         payable
     {
         Token token = new Token(name, symbol);
         _tokens[msg.sender].push(token);
+    }
+
+    function getTokens() public view returns (memory Token[]) {
+        return _tokens[msg.sender];
     }
 }

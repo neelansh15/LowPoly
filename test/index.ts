@@ -17,6 +17,20 @@ describe("DAO", function () {
     const DAO = await ethers.getContractFactory("DAO");
     const dao1 = await DAO.deploy(token.address);
     const dao2 = await dao1.deployed();
+
     await dao2.votingDelay();
+  });
+});
+
+describe("LowPolyFactory", function () {
+  it("Should deploy new token contract and fetch it", async function () {
+    const LowPolyFactory = await ethers.getContractFactory("LowPolyFactory");
+    const factory = await LowPolyFactory.deploy();
+    await factory.deployed();
+
+    await factory.createToken("Mah Man token", "MAHMAN");
+
+    const mytokens = await factory.getTokens();
+    console.log(mytokens);
   });
 });
