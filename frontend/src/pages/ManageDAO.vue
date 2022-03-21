@@ -16,9 +16,11 @@ const tokenInfo = reactive({
 
 async function init() {
   const tokenContract = useTokenContract(tokenData.address);
-  tokenInfo.name = await tokenContract.name();
-  tokenInfo.symbol = await tokenContract.symbol();
-  tokenInfo.decimals = await tokenContract.decimals();
+  if (tokenContract) {
+    tokenInfo.name = await tokenContract.name();
+    tokenInfo.symbol = await tokenContract.symbol();
+    tokenInfo.decimals = await tokenContract.decimals();
+  }
 }
 </script>
 

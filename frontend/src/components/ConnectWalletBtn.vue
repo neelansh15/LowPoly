@@ -11,7 +11,7 @@
 import { ethers } from "ethers";
 import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
-import { useWeb3Store } from "../stores/web3Store";
+import { useWeb3Store } from "../store/web3Store";
 
 const walletConnected = ref(false);
 // const address = computed(() => useWeb3Store.ad);
