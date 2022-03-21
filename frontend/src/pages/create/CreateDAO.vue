@@ -23,7 +23,7 @@ import SecondaryButton from "../../components/SecondaryButton.vue";
         <textarea
           rows="5"
           cols="33"
-          class="mt-3 space-x-2 border-2 border-light-800"
+          class="mt-3 space-x-2"
           type="text"
           placeholder="Describe what the DAO does"
         />
