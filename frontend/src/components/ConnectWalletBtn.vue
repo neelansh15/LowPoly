@@ -50,17 +50,17 @@ async function connectWallet() {
   const accounts = await web3Provider.send("eth_requestAccounts", []);
 
   const network = await web3Provider.getNetwork();
-  wallet.updateChainId(network.chainId);
+  wallet.setChainId(network.chainId);
   const signer = web3Provider.getSigner();
-  wallet.updateAddress(await signer.getAddress());
+  wallet.setAddress(await signer.getAddress());
 
   function accountsChanged(accounts: string[]) {
     if (accounts.length == 0) {
       walletConnected.value = false;
-      wallet.updateAddress(null);
+      wallet.setAddress(null);
       disconnect();
     } else {
-      wallet.updateAddress(accounts[0]);
+      wallet.setAddress(accounts[0]);
     }
   }
 
@@ -68,7 +68,7 @@ async function connectWallet() {
 
   function chainChanged(newChainId: string) {
     newChainId = newChainId.split("x")[1];
-    wallet.updateChainId(parseInt(newChainId));
+    wallet.setChainId(parseInt(newChainId));
     console.log({ changedChain: chainId });
   }
   provider.on("chainChanged", chainChanged);
