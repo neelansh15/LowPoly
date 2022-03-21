@@ -19,7 +19,7 @@ contract LowPolyFactory {
         _tokens[msg.sender].push(token);
     }
 
-    function getTokens() public view returns (memory Token[]) {
+    function getTokens() public view returns (Token[] memory) {
         return _tokens[msg.sender];
     }
 }

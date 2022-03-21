@@ -63,7 +63,7 @@ describe("LowPolyFactory", function () {
     const factory = await LowPolyFactory.deploy();
     await factory.deployed();
 
-    await factory.createToken("Mah Man token", "MAHMAN");
+    await factory.createToken("Sample token", "SAMP");
 
     const mytokens = await factory.getTokens();
     console.log(mytokens);
