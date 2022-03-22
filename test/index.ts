@@ -1,6 +1,8 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { Token } from "../typechain";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
 
 describe("DAO", function () {
   it("Should deploy", async function () {
@@ -22,7 +24,7 @@ describe("DAO", function () {
     await dao2.votingDelay();
   });
 
-  it("Should delegate and transfer votes", async function(){
+  it("Should delegate votes", async function(){
 
     const Token = await ethers.getContractFactory("Token");
     const name = "TestToken";
@@ -35,37 +37,44 @@ describe("DAO", function () {
     console.log(await token.delegates(owner.address));
     console.log(await token.getVotes(owner.address));
     console.log(await token.address);
-    // console.log(
-    //   await token.delegateBySig(
-    //     token.address,
-    //     123,
-    //     34,
-    //     15,
-        
-    //   ));
-   
-    // const name1 = "TestToken1";
-    // const symbol1 = "TT1";
-    
-    // const token1 = await Token.deploy(name1, symbol1);
-    // await token1.deployed();
 
-    // console.log(await token1.getVotes(token1.address));
-    
-    // console.log(await token.moveVotingPower(token.address, token1.address, 50));
-    // await token._afterTokenTransfer(token.address,token1.address,50);
   });
+
+  it("Create proposal and cast votes", async function(){
+
+    const Token = await ethers.getContractFactory("Token");
+    const name = "TestToken";
+    const symbol = "TT";
+    const token1 = await Token.deploy(name, symbol);
+    await token1.deployed();
+
+    const tokenAddress = token1.address ;
+    const [owner, account1] = await ethers.getSigners();
+    const token = await ethers.getContractAt('ERC20', tokenAddress);
+    // const teamAddress = account1.address;
+    // const grantAmount = 0;
+    // const transferCalldata = token.interface.encodeFunctionData(‘transfer’, [teamAddress, grantAmount]);
+    // const proposeId= await governor.propose(
+    //   [tokenAddress],
+    //   [0],
+    //   [transferCalldata],
+    //   “Proposal #1: Give grant to team”,
+    // );
+
+
+  })
 });
 
-describe("LowPolyFactory", function () {
-  it("Should deploy new token contract and fetch it", async function () {
-    const LowPolyFactory = await ethers.getContractFactory("LowPolyFactory");
-    const factory = await LowPolyFactory.deploy();
-    await factory.deployed();
+// describe("LowPolyFactory", function () {
+//   it("Should deploy new token contract and fetch it", async function () {
+//     const LowPolyFactory = await ethers.getContractFactory("LowPolyFactory");
+//     const factory = await LowPolyFactory.deploy();
+//     await factory.deployed();
 
-    await factory.createToken("Sample token", "SAMP");
+//     await factory.createToken("Sample token", "SAMP");
 
-    const mytokens = await factory.getTokens();
-    console.log(mytokens);
-  });
-});
+//     const mytokens = await factory.getTokens();
+//     console.log(mytokens);
+//   });
+// });
+
