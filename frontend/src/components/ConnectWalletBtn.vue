@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { ethers } from "ethers";
 import { storeToRefs } from "pinia";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useWeb3Store } from "../store/web3Store";
 
 const walletConnected = ref(false);
@@ -18,6 +18,24 @@ const walletConnected = ref(false);
 // const chainId = ref(0);
 
 const { address, chainId } = storeToRefs(useWeb3Store());
+const init = async () => {
+  const provider = window.ethereum;
+
+  const web3Provider = new ethers.providers.Web3Provider(
+    window.ethereum,
+    "any",
+  );
+  const permissions = await provider.request({
+    method: "wallet_getPermissions",
+  });
+  if (
+    permissions.length > 0 &&
+    permissions[0].parentCapability === "eth_accounts"
+  ) {
+    connectWallet();
+  }
+};
+onMounted(init);
 
 async function connectWallet() {
   const wallet = useWeb3Store();
@@ -29,20 +47,20 @@ async function connectWallet() {
     "any",
   );
 
-  await web3Provider.send("eth_requestAccounts", []);
+  const accounts = await web3Provider.send("eth_requestAccounts", []);
 
   const network = await web3Provider.getNetwork();
-  wallet.updateChainId(network.chainId);
+  wallet.setChainId(network.chainId);
   const signer = web3Provider.getSigner();
-  wallet.updateAddress(await signer.getAddress());
+  wallet.setAddress(await signer.getAddress());
 
   function accountsChanged(accounts: string[]) {
     if (accounts.length == 0) {
       walletConnected.value = false;
-      wallet.updateAddress(null);
+      wallet.setAddress(null);
       disconnect();
     } else {
-      wallet.updateAddress(accounts[0]);
+      wallet.setAddress(accounts[0]);
     }
   }
 
@@ -50,7 +68,7 @@ async function connectWallet() {
 
   function chainChanged(newChainId: string) {
     newChainId = newChainId.split("x")[1];
-    wallet.updateChainId(parseInt(newChainId));
+    wallet.setChainId(parseInt(newChainId));
     console.log({ changedChain: chainId });
   }
   provider.on("chainChanged", chainChanged);

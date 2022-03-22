@@ -1,3 +1,7 @@
 input[type="text"] {
-    @apply p-2 border border-gray-400 rounded;
+  @apply p-2 border border-gray-400 rounded;
+}
+textarea {
+  @apply p-2 border border-gray-400 rounded;
+  resize: none;
 }

@@ -14,9 +14,11 @@ contract LowPolyFactory {
     function createToken(string memory name, string memory symbol)
         public
         payable
+        returns (Token)
     {
         Token token = new Token(name, symbol);
         _tokens[msg.sender].push(token);
+        return token;
     }
 
     function getTokens() public view returns (Token[] memory) {

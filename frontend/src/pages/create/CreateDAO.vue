@@ -21,7 +21,8 @@ import SecondaryButton from "../../components/SecondaryButton.vue";
         <input class="mt-3 space-x-2" type="text" placeholder="Name" />
         <br />
         <textarea
-          box="border"
+          rows="5"
+          cols="33"
           class="mt-3 space-x-2"
           type="text"
           placeholder="Describe what the DAO does"

@@ -1,8 +1,7 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { Token } from "../typechain";
+// import { Token } from "../typechain";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
 
 describe("DAO", function () {
   it("Should deploy", async function () {
@@ -24,8 +23,7 @@ describe("DAO", function () {
     await dao2.votingDelay();
   });
 
-  it("Should delegate votes", async function(){
-
+  it("Should delegate votes", async function () {
     const Token = await ethers.getContractFactory("Token");
     const name = "TestToken";
     const symbol = "TT";
@@ -37,20 +35,18 @@ describe("DAO", function () {
     console.log(await token.delegates(owner.address));
     console.log(await token.getVotes(owner.address));
     console.log(await token.address);
-
   });
 
-  it("Create proposal and cast votes", async function(){
-
-    const Token = await ethers.getContractFactory("Token");
+  it("Create proposal and cast votes", async function () {
+    const Token = await ethers.getContractFactory("Token")
     const name = "TestToken";
     const symbol = "TT";
     const token1 = await Token.deploy(name, symbol);
     await token1.deployed();
 
-    const tokenAddress = token1.address ;
-    const [owner, account1] = await ethers.getSigners();
-    const token = await ethers.getContractAt('ERC20', tokenAddress);
+    // const tokenAddress = token1.address ;
+    // const [owner, account1] = await ethers.getSigners();
+    // const token2 = await ethers.getContractAt("ERC20", tokenAddress);
     // const teamAddress = account1.address;
     // const grantAmount = 0;
     // const transferCalldata = token.interface.encodeFunctionData(‘transfer’, [teamAddress, grantAmount]);
@@ -60,9 +56,7 @@ describe("DAO", function () {
     //   [transferCalldata],
     //   “Proposal #1: Give grant to team”,
     // );
-
-
-  })
+  });
 });
 
 // describe("LowPolyFactory", function () {
@@ -77,4 +71,3 @@ describe("DAO", function () {
 //     console.log(mytokens);
 //   });
 // });
-
