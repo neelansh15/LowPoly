@@ -6,9 +6,12 @@ import "./DAO.sol";
 
 contract LowPolyFactory {
     // Mapping of owner addresses to their created Tokens
-    mapping(address => Token[]) _tokens;
+    mapping(address => Token[]) private _tokens;
     // Mapping of owner addresses to their created DAOs
-    mapping(address => DAO[]) _daos;
+    mapping(address => DAO[]) private _daos;
+
+    Token[] public allTokens;
+    DAO[] public allDaos;
 
     // Make something payable to charge minting fees
     function createToken(string memory name, string memory symbol)
@@ -18,12 +21,14 @@ contract LowPolyFactory {
     {
         Token token = new Token(name, symbol);
         _tokens[msg.sender].push(token);
+        allTokens.push(token);
         return token;
     }
 
     function createDAO(IVotes tokenAddress) public payable returns (DAO) {
         DAO dao = new DAO(tokenAddress);
         _daos[msg.sender].push(dao);
+        allDaos.push(dao);
         return dao;
     }
 
