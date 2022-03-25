@@ -21,7 +21,17 @@ contract LowPolyFactory {
         return token;
     }
 
+    function createDAO(IVotes tokenAddress) public payable returns (DAO) {
+        DAO dao = new DAO(tokenAddress);
+        _daos[msg.sender].push(dao);
+        return dao;
+    }
+
     function getTokens() public view returns (Token[] memory) {
         return _tokens[msg.sender];
+    }
+
+    function getDAOs() public view returns (DAO[] memory) {
+        return _daos[msg.sender];
     }
 }
