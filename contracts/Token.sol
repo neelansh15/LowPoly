@@ -13,9 +13,10 @@ contract Token is ERC20, Ownable, ERC20Permit, ERC20Votes {
     constructor(
         string memory _name,
         string memory _symbol,
+        int256 memory totalSupply
         address _ownerAddress
     ) ERC20(_name, _symbol) ERC20Permit(_name) {
-        _mint(_ownerAddress, 1000000 * 10**decimals());
+        _mint(_ownerAddress, totalSupply * 10**decimals());
         _factory = msg.sender;
     }
 
