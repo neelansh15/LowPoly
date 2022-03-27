@@ -3,7 +3,13 @@ import { ethers } from "hardhat";
 // import { Token } from "../typechain";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-describe("DAO", function () {
+describe.only("test", function () {
+  it("should print something for testing", async function () {
+    console.log("HEY this is a test");
+  });
+});
+
+describe("LowPoly", function () {
   it("Should deploy", async function () {
     const Token = await ethers.getContractFactory("Token");
 
@@ -38,7 +44,7 @@ describe("DAO", function () {
   });
 
   it("Create proposal and cast votes", async function () {
-    const Token = await ethers.getContractFactory("Token")
+    const Token = await ethers.getContractFactory("Token");
     const name = "TestToken";
     const symbol = "TT";
     const token1 = await Token.deploy(name, symbol);
@@ -58,16 +64,3 @@ describe("DAO", function () {
     // );
   });
 });
-
-// describe("LowPolyFactory", function () {
-//   it("Should deploy new token contract and fetch it", async function () {
-//     const LowPolyFactory = await ethers.getContractFactory("LowPolyFactory");
-//     const factory = await LowPolyFactory.deploy();
-//     await factory.deployed();
-
-//     await factory.createToken("Sample token", "SAMP");
-
-//     const mytokens = await factory.getTokens();
-//     console.log(mytokens);
-//   });
-// });
