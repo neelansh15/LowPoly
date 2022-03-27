@@ -10,16 +10,22 @@ const { address, chainId } = storeToRefs(useWeb3Store());
 const tokenInfo = reactive({
   name: "",
   symbol: "",
-  decimals: -1,
+  totalSupply: "",
 });
 
 async function createToken() {
   const tokenFactoryContract = useTokenFactoryContract();
   try {
     if (tokenFactoryContract) {
-      // await tokenFactoryContract;
+      const result = await tokenFactoryContract.createToken(
+        tokenInfo.name,
+        tokenInfo.symbol,
+        tokenInfo.totalSupply,
+      );
+      result.wait(1).then(() => {
+        console.log("Done");
+      });
     }
-    console.log("Done");
   } catch (e: any) {
     console.log(e.message);
   }
@@ -34,9 +40,24 @@ async function createToken() {
 
     <div class="p-10">
       <form @submit.prevent="">
-        <input class="ml-3" type="text" placeholder="Name" />
-        <input class="ml-3" type="text" placeholder="Symbol" />
-        <input class="ml-3" type="text" placeholder="Supply amount" />
+        <input
+          class="ml-3"
+          type="text"
+          v-model="tokenInfo.name"
+          placeholder="Name"
+        />
+        <input
+          class="ml-3"
+          type="text"
+          v-model="tokenInfo.symbol"
+          placeholder="Symbol"
+        />
+        <input
+          class="ml-3"
+          type="text"
+          v-model="tokenInfo.totalSupply"
+          placeholder="Supply amount"
+        />
         <div class="mt-4 ml-3 space-x-2">
           <PrimaryButton type="button" @click="createToken"
             >Create Token</PrimaryButton
