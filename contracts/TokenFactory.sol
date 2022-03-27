@@ -14,7 +14,7 @@ contract TokenFactory {
         public
         returns (Token)
     {
-        Token token = new Token(name, symbol);
+        Token token = new Token(name, symbol, msg.sender);
         _tokens[msg.sender].push(address(token));
         emit NewToken(address(token), name, symbol);
         return token;

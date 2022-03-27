@@ -22,10 +22,7 @@ describe("LowPoly Factories", function () {
         symbol: "CAMP",
       },
     ];
-    console.log(
-      "response from testing new token creation ",
-      await factory.createToken("mytest", "mysymbol")
-    );
+    
     await Promise.all(
       tokenList.map(async (token) => {
         return factory.createToken(token.name, token.symbol);

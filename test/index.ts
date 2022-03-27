@@ -1,7 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 // import { Token } from "../typechain";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 describe("DAO", function () {
   it("Should deploy", async function () {
