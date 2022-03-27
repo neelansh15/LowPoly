@@ -39,11 +39,7 @@ async function transferTokens() {
   const tokenContract = useTokenContract(tokenData.address);
   try {
     if (tokenContract) {
-      await tokenContract.transferFrom(
-        address.value,
-        transfer.address,
-        transfer.amount,
-      );
+      await tokenContract.transfer(transfer.address, transfer.amount);
     }
     console.log("Done");
   } catch (e: any) {
