@@ -2,16 +2,16 @@
 pragma solidity ^0.8.4;
 
 import "./Token.sol";
-import "./DAO.sol";
+// import "./DAO.sol";
 
 contract LowPolyFactory {
     // Mapping of owner addresses to their created Tokens
-    mapping(address => Token[]) private _tokens;
+    mapping(address => address[]) private _tokens;
     // Mapping of owner addresses to their created DAOs
-    mapping(address => DAO[]) private _daos;
+    mapping(address => address[]) private _daos;
 
-    Token[] public allTokens;
-    DAO[] public allDaos;
+    event NewToken(address _tokenAddress, string _name, string _symbol);
+    event NewDAO(address _daoAddress, address _tokenAddress);
 
     // Make something payable to charge minting fees
     function createToken(string memory name, string memory symbol)
@@ -20,23 +20,23 @@ contract LowPolyFactory {
         returns (Token)
     {
         Token token = new Token(name, symbol);
-        _tokens[msg.sender].push(token);
-        allTokens.push(token);
+        _tokens[msg.sender].push(address(token));
+        emit NewToken(address(token), name, symbol);
         return token;
     }
 
-    function createDAO(IVotes tokenAddress) public payable returns (DAO) {
-        DAO dao = new DAO(tokenAddress);
-        _daos[msg.sender].push(dao);
-        allDaos.push(dao);
-        return dao;
-    }
+    // function createDAO(IVotes tokenAddress) public payable returns (DAO) {
+    //     DAO dao = new DAO(tokenAddress);
+    //     _daos[msg.sender].push(address(dao));
+    //     emit NewDAO(address(dao), address(tokenAddress));
+    //     return dao;
+    // }
 
-    function getTokens() public view returns (Token[] memory) {
+    function getTokens() public view returns (address[] memory) {
         return _tokens[msg.sender];
     }
 
-    function getDAOs() public view returns (DAO[] memory) {
+    function getDAOs() public view returns (address[] memory) {
         return _daos[msg.sender];
     }
 }
