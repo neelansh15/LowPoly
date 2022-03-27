@@ -5,6 +5,9 @@ import HeaderCard from "~/components/HeaderCard.vue";
 import tokenData from "../../../abis/token.json";
 import { useTokenContract } from "~/utils/useContract";
 import PrimaryButton from "~/components/PrimaryButton.vue";
+import { storeToRefs } from "pinia";
+import { useWeb3Store } from "../store/web3Store";
+const { address, chainId } = storeToRefs(useWeb3Store());
 
 onMounted(init);
 
@@ -18,15 +21,34 @@ const delegate = reactive({
 });
 const transfer = reactive({
   address: "",
-  amount: 0,
+  amount: "",
 });
 
 async function delegateVotes() {
   const tokenContract = useTokenContract(tokenData.address);
-  if (tokenContract) {
-    await tokenContract.delegate(delegate.address);
+  try {
+    if (tokenContract) {
+      await tokenContract.delegate(delegate.address);
+    }
+    console.log("Done");
+  } catch (e: any) {
+    console.log(e.message);
   }
-  console.log("Done");
+}
+async function transferTokens() {
+  const tokenContract = useTokenContract(tokenData.address);
+  try {
+    if (tokenContract) {
+      await tokenContract.transferFrom(
+        address.value,
+        transfer.address,
+        transfer.amount,
+      );
+    }
+    console.log("Done");
+  } catch (e: any) {
+    console.log(e.message);
+  }
 }
 
 async function init() {
@@ -62,7 +84,7 @@ async function init() {
           v-model="transfer.amount"
           placeholder="Amount"
         />
-        <PrimaryButton class="ml-3" type="submit">
+        <PrimaryButton class="ml-3" type="button" @click="transferTokens">
           Transfer tokens
         </PrimaryButton>
       </form>
