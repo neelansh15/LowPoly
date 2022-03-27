@@ -1,9 +1,9 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("LowPoly Factory", function () {
-  it("Should deploy new token contract and fetch it", async function () {
-    const LowPolyFactory = await ethers.getContractFactory("LowPolyFactory");
+describe("LowPoly Factories", function () {
+  it("Token Factory: Should deploy new token contract and fetch it", async function () {
+    const LowPolyFactory = await ethers.getContractFactory("TokenFactory");
     const factory = await LowPolyFactory.deploy();
     await factory.deployed();
 

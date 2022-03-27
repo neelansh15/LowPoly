@@ -2,18 +2,33 @@ import { ethers } from "hardhat";
 import { writeFileSync } from "fs";
 
 async function main() {
-  const Factory = await ethers.getContractFactory("LowPolyFactory");
-  const factory = await Factory.deploy();
+  // Token Factory
+  const TokenFactory = await ethers.getContractFactory("TokenFactory");
+  const tokenFactory = await TokenFactory.deploy();
 
-  await factory.deployed();
+  await tokenFactory.deployed();
 
-  const factoryData = {
-    address: factory.address,
-    abi: JSON.parse(factory.interface.format("json") as string),
+  const tokenFactoryData = {
+    address: tokenFactory.address,
+    abi: JSON.parse(tokenFactory.interface.format("json") as string),
   };
-  writeFileSync("./abis/LowPolyFactory.json", JSON.stringify(factoryData));
+  writeFileSync("./abis/tokenFactory.json", JSON.stringify(tokenFactoryData));
 
-  console.log("LowPoly Factory deployed to:", factory.address);
+  console.log("LowPoly tokenFactory deployed to:", tokenFactory.address);
+
+  // DAO Factory
+  const DAOFactory = await ethers.getContractFactory("DAOFactory");
+  const daoFactory = await DAOFactory.deploy();
+
+  await daoFactory.deployed();
+
+  const daoFactoryData = {
+    address: daoFactory.address,
+    abi: JSON.parse(daoFactory.interface.format("json") as string),
+  };
+  writeFileSync("./abis/daoFactory.json", JSON.stringify(daoFactoryData));
+
+  console.log("LowPoly daoFactory deployed to:", daoFactory.address);
 }
 
 main().catch((error) => {
