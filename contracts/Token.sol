@@ -7,42 +7,41 @@ import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 
 contract Token is ERC20, Ownable, ERC20Permit, ERC20Votes {
+  address private _factory;
 
-    address private _factory;
+  constructor(string memory _name, string memory _symbol)
+    ERC20(_name, _symbol)
+    ERC20Permit(_name)
+  {
+    // _mint(msg.sender, 1000000 * 10**decimals());
+    _factory = msg.sender;
+  }
 
-    constructor(string memory _name, string memory _symbol)
-        ERC20(_name, _symbol)
-        ERC20Permit(_name)
-    {
-        // _mint(msg.sender, 1000000 * 10**decimals());
-        _factory = msg.sender;
-    }
+  function mint(address to, uint256 amount) public onlyOwner {
+    _mint(to, amount);
+  }
 
-    function mint(address to, uint256 amount) public onlyOwner {
-        _mint(to, amount);
-    }
+  // The following functions are overrides required by Solidity.
 
-    // The following functions are overrides required by Solidity.
+  function _afterTokenTransfer(
+    address from,
+    address to,
+    uint256 amount
+  ) internal override(ERC20, ERC20Votes) {
+    super._afterTokenTransfer(from, to, amount);
+  }
 
-    function _afterTokenTransfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal override(ERC20, ERC20Votes) {
-        super._afterTokenTransfer(from, to, amount);
-    }
+  function _mint(address to, uint256 amount)
+    internal
+    override(ERC20, ERC20Votes)
+  {
+    super._mint(to, amount);
+  }
 
-    function _mint(address to, uint256 amount)
-        internal
-        override(ERC20, ERC20Votes)
-    {
-        super._mint(to, amount);
-    }
-
-    function _burn(address account, uint256 amount)
-        internal
-        override(ERC20, ERC20Votes)
-    {
-        super._burn(account, amount);
-    }
+  function _burn(address account, uint256 amount)
+    internal
+    override(ERC20, ERC20Votes)
+  {
+    super._burn(account, amount);
+  }
 }

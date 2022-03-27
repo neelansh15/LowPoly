@@ -13,6 +13,21 @@ const tokenInfo = reactive({
   symbol: "",
   decimals: -1,
 });
+const delegate = reactive({
+  address: "",
+});
+const transfer = reactive({
+  address: "",
+  amount: 0,
+});
+
+async function delegateVotes() {
+  const tokenContract = useTokenContract(tokenData.address);
+  if (tokenContract) {
+    await tokenContract.delegate(delegate.address);
+  }
+  console.log("Done");
+}
 
 async function init() {
   const tokenContract = useTokenContract(tokenData.address);
@@ -39,20 +54,27 @@ async function init() {
 
     <div class="p-10">
       <b>Transfer tokens</b>
-      <form action="">
-        <input type="text" placeholder="Address" />
-        <input class="ml-3" type="text" placeholder="Amount" />
-        <PrimaryButton class="ml-3" type="submit"
-          >Transfer tokens</PrimaryButton
-        >
+      <form action="transferTokens">
+        <input type="text" v-model="transfer.address" placeholder="Address" />
+        <input
+          class="ml-3"
+          type="text"
+          v-model="transfer.amount"
+          placeholder="Amount"
+        />
+        <PrimaryButton class="ml-3" type="submit">
+          Transfer tokens
+        </PrimaryButton>
       </form>
     </div>
 
     <div class="p-10">
       <b>Delegate votes</b>
-      <form action="">
-        <input type="text" placeholder="Address" />
-        <PrimaryButton class="ml-3" type="submit">Delegate votes</PrimaryButton>
+      <form>
+        <input type="text" v-model="delegate.address" placeholder="Address" />
+        <PrimaryButton class="ml-3" type="button" @click="delegateVotes">
+          Delegate votes
+        </PrimaryButton>
       </form>
     </div>
   </div>
