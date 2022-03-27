@@ -16,29 +16,29 @@ async function main() {
 
   // DEPLOY TOKEN
   const Token = await ethers.getContractFactory("Token");
-  const token = await Token.deploy("TestToken1", "TT1");
+  // const token = await Token.deploy("TestToken1", "TT1");
 
-  await token.deployed();
+  // await token.deployed();
 
   const tokenData = {
-    address: token.address,
-    abi: JSON.parse(token.interface.format("json") as string),
+    // address: token.address,
+    abi: JSON.parse(Token.interface.format("json") as string),
   };
   writeFileSync("./abis/token.json", JSON.stringify(tokenData));
 
-  console.log("token deployed to:", token.address);
+  // console.log("token deployed to:", token.address);
 
   // DEPLOY DAO (for testing, actually need only LowPoly contract)
-  // const DAO = await ethers.getContractFactory("DAO");
+  const DAO = await ethers.getContractFactory("DAO");
   // const dao = await DAO.deploy("0xf145192Db921b0e2A6699748eD3630b956b6CD19");
 
   // await dao.deployed();
 
-  // const daoData = {
-  //   address: dao.address,
-  //   abi: JSON.parse(dao.interface.format("json") as string),
-  // };
-  // writeFileSync("./abis/dao.json", JSON.stringify(daoData));
+  const daoData = {
+    // address: dao.address,
+    abi: JSON.parse(DAO.interface.format("json") as string),
+  };
+  writeFileSync("./abis/dao.json", JSON.stringify(daoData));
 
   // console.log("dao deployed to:", dao.address);
 }
