@@ -2,6 +2,35 @@
 import HeaderCard from "~/components/HeaderCard.vue";
 import PrimaryButton from "~/components/PrimaryButton.vue";
 import SecondaryButton from "../../components/SecondaryButton.vue";
+import { useDAOFactoryContract } from "~/utils/useContract";
+import { storeToRefs } from "pinia";
+import { useWeb3Store } from "../../store/web3Store";
+import { reactive } from "vue";
+const { address, chainId } = storeToRefs(useWeb3Store());
+
+const tokenInfo = reactive({
+  address: "",
+});
+const DAOInfo = reactive({
+  name: "",
+});
+
+async function createDAO() {
+  const DAOFactoryContract = useDAOFactoryContract();
+  try {
+    if (DAOFactoryContract) {
+      const result = await DAOFactoryContract.createDAO(
+        tokenInfo.address,
+        DAOInfo.name,
+      );
+      result.wait(1).then(() => {
+        console.log("Done");
+      });
+    }
+  } catch (e: any) {
+    console.log(e.message);
+  }
+}
 </script>
 
 <template>
@@ -16,19 +45,23 @@ import SecondaryButton from "../../components/SecondaryButton.vue";
           <PrimaryButton> Create a token </PrimaryButton>
         </router-link>
         <p class="inline-block ml-3">OR</p>
-        <input class="space-x-2 ml-3" type="text" placeholder="Token address" />
+        <input
+          class="space-x-2 ml-3"
+          type="text"
+          v-model="tokenInfo.address"
+          placeholder="Token address"
+        />
         <br />
-        <input class="mt-3 space-x-2" type="text" placeholder="Name" />
-        <br />
-        <textarea
-          rows="5"
-          cols="33"
+        <input
           class="mt-3 space-x-2"
           type="text"
-          placeholder="Describe what the DAO does"
+          v-model="DAOInfo.name"
+          placeholder="Name"
         />
         <div class="mt-3 space-x-2">
-          <PrimaryButton>Create DAO</PrimaryButton>
+          <PrimaryButton type="button" @click="createDAO">
+            Create DAO
+          </PrimaryButton>
           <SecondaryButton type="reset">Reset</SecondaryButton>
         </div>
       </form>
