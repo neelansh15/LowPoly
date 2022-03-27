@@ -1,44 +1,72 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+// import { Token } from "../typechain";
 
-describe("LowPoly Factories", function () {
-  it("Token Factory: Should deploy new token contract and fetch it", async function () {
-    const LowPolyFactory = await ethers.getContractFactory("TokenFactory");
-    const factory = await LowPolyFactory.deploy();
-    await factory.deployed();
+describe("DAO", function () {
+  it("Should deploy", async function () {
+    const Token = await ethers.getContractFactory("Token");
 
-    // Tokens to deploy from owner account
-    const tokenList = [
-      {
-        name: "Sample Token",
-        symbol: "SAMP",
-      },
-      {
-        name: "Rampant Token",
-        symbol: "RAMP",
-      },
-      {
-        name: "Crampant Token",
-        symbol: "CAMP",
-      },
-    ];
-    
-    await Promise.all(
-      tokenList.map(async (token) => {
-        return factory.createToken(token.name, token.symbol);
-      })
-    );
+    const name = "TestToken";
+    const symbol = "TT";
 
-    const mytokens = await factory.getTokens();
-    console.log("My Created Tokens", mytokens);
+    const token = await Token.deploy(name, symbol);
+    await token.deployed();
 
-    for (let i = 0; i < tokenList.length; i++) {
-      const tokenContract = await ethers.getContractAt("Token", mytokens[i]);
-      const tokenName = await tokenContract.name();
-      const tokenSymbol = await tokenContract.symbol();
-      console.log("Token Details", { tokenName, tokenSymbol });
-      await expect(tokenName).to.equal(tokenList[i].name);
-      await expect(tokenSymbol).to.equal(tokenList[i].symbol);
-    }
+    await expect(await token.name()).to.equal(name);
+    await expect(await token.symbol()).to.equal(symbol);
+
+    const DAO = await ethers.getContractFactory("DAO");
+    const dao1 = await DAO.deploy(token.address);
+    const dao2 = await dao1.deployed();
+
+    await dao2.votingDelay();
+  });
+
+  it("Should delegate votes", async function () {
+    const Token = await ethers.getContractFactory("Token");
+    const name = "TestToken";
+    const symbol = "TT";
+
+    const token = await Token.deploy(name, symbol);
+    await token.deployed();
+    const [owner, account1] = await ethers.getSigners();
+    await token.delegate(account1.address);
+    console.log(await token.delegates(owner.address));
+    console.log(await token.getVotes(owner.address));
+    console.log(await token.address);
+  });
+
+  it("Create proposal and cast votes", async function () {
+    const Token = await ethers.getContractFactory("Token")
+    const name = "TestToken";
+    const symbol = "TT";
+    const token1 = await Token.deploy(name, symbol);
+    await token1.deployed();
+
+    // const tokenAddress = token1.address ;
+    // const [owner, account1] = await ethers.getSigners();
+    // const token2 = await ethers.getContractAt("ERC20", tokenAddress);
+    // const teamAddress = account1.address;
+    // const grantAmount = 0;
+    // const transferCalldata = token.interface.encodeFunctionData(‘transfer’, [teamAddress, grantAmount]);
+    // const proposeId= await governor.propose(
+    //   [tokenAddress],
+    //   [0],
+    //   [transferCalldata],
+    //   “Proposal #1: Give grant to team”,
+    // );
   });
 });
+
+// describe("LowPolyFactory", function () {
+//   it("Should deploy new token contract and fetch it", async function () {
+//     const LowPolyFactory = await ethers.getContractFactory("LowPolyFactory");
+//     const factory = await LowPolyFactory.deploy();
+//     await factory.deployed();
+
+//     await factory.createToken("Sample token", "SAMP");
+
+//     const mytokens = await factory.getTokens();
+//     console.log(mytokens);
+//   });
+// });
