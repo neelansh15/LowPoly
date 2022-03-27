@@ -10,11 +10,12 @@ contract TokenFactory {
     event NewToken(address _tokenAddress, string _name, string _symbol);
 
     // Make something payable to charge minting fees
-    function createToken(string memory name, string memory symbol, int256 memory totalSupply)
-        public
-        returns (Token)
-    {
-        Token token = new Token(name, symbol, totalSupply msg.sender);
+    function createToken(
+        string memory name,
+        string memory symbol,
+        uint256 totalSupply
+    ) public returns (Token) {
+        Token token = new Token(name, symbol, totalSupply, msg.sender);
         _tokens[msg.sender].push(address(token));
         emit NewToken(address(token), name, symbol);
         return token;
