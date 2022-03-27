@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { onMounted, reactive } from "vue";
 import HeaderCard from "~/components/HeaderCard.vue";
 import PrimaryButton from "~/components/PrimaryButton.vue";
 import SecondaryButton from "../../components/SecondaryButton.vue";
