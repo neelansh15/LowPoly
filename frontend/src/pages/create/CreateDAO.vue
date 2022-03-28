@@ -17,11 +17,12 @@ const DAOInfo = reactive({
 
 async function createDAO() {
   const DAOFactoryContract = useDAOFactoryContract();
+  console.log(tokenInfo.address, DAOInfo.name);
   try {
     if (DAOFactoryContract) {
       const result = await DAOFactoryContract.createDAO(
-        tokenInfo.address,
         DAOInfo.name,
+        tokenInfo.address,
       );
       result.wait(1).then(() => {
         console.log("Done");
