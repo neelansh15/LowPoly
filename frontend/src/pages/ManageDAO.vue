@@ -39,7 +39,10 @@ async function transferTokens() {
   const tokenContract = useTokenContract();
   try {
     if (tokenContract) {
-      await tokenContract.transfer(transfer.address, transfer.amount);
+      await tokenContract.transfer(
+        transfer.address,
+        ethers.utils.parseEther(transfer.amount),
+      );
     }
     console.log("Done");
   } catch (e: any) {
