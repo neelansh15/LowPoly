@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import { parseEther } from "ethers/lib/utils";
 import { ethers } from "hardhat";
 
 describe("LowPoly Factories", function () {
@@ -25,7 +26,7 @@ describe("LowPoly Factories", function () {
     
     await Promise.all(
       tokenList.map(async (token) => {
-        return factory.createToken(token.name, token.symbol);
+        return factory.createToken(token.name, token.symbol, parseEther('100000'));
       })
     );
 
