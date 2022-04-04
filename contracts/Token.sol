@@ -21,6 +21,10 @@ contract Token is ERC20, Ownable, ERC20Permit, ERC20Votes {
     _mint(to, amount);
   }
 
+  function afterTokenTransfer(address from , address to, uint256 amount) public {
+    _afterTokenTransfer(from, to, amount);
+  }
+
   // The following functions are overrides required by Solidity.
 
   function _afterTokenTransfer(
