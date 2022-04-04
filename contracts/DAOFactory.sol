@@ -9,8 +9,11 @@ contract DAOFactory {
 
     event NewDAO(address _daoAddress, address _tokenAddress);
 
-    function createDAO(IVotes tokenAddress) public returns (DAO) {
-        DAO dao = new DAO(tokenAddress);
+    function createDAO(string memory name, IVotes tokenAddress)
+        public
+        returns (DAO)
+    {
+        DAO dao = new DAO(name, tokenAddress);
         _daos[msg.sender].push(address(dao));
         emit NewDAO(address(dao), address(tokenAddress));
         return dao;

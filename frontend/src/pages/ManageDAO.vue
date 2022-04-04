@@ -25,7 +25,7 @@ const transfer = reactive({
 });
 
 async function delegateVotes() {
-  const tokenContract = useTokenContract(tokenData.address);
+  const tokenContract = useTokenContract();
   try {
     if (tokenContract) {
       await tokenContract.delegate(delegate.address);
@@ -36,10 +36,13 @@ async function delegateVotes() {
   }
 }
 async function transferTokens() {
-  const tokenContract = useTokenContract(tokenData.address);
+  const tokenContract = useTokenContract();
   try {
     if (tokenContract) {
-      await tokenContract.transfer(transfer.address, transfer.amount);
+      await tokenContract.transfer(
+        transfer.address,
+        ethers.utils.parseEther(transfer.amount),
+      );
     }
     console.log("Done");
   } catch (e: any) {
@@ -48,7 +51,7 @@ async function transferTokens() {
 }
 
 async function init() {
-  const tokenContract = useTokenContract(tokenData.address);
+  const tokenContract = useTokenContract();
   if (tokenContract) {
     tokenInfo.name = await tokenContract.name();
     tokenInfo.symbol = await tokenContract.symbol();
