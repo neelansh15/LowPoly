@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-// import { Token } from "../typechain";
+import { Token } from "../typechain";
 
 describe("DAO", function () {
   it("Should deploy", async function () {
@@ -29,22 +29,40 @@ describe("DAO", function () {
 
     const token = await Token.deploy(name, symbol);
     await token.deployed();
-    const [owner, account1] = await ethers.getSigners();
+    const [account1] = await ethers.getSigners();
     await token.delegate(account1.address);
-    console.log(await token.delegates(owner.address));
-    console.log(await token.getVotes(owner.address));
-    console.log(await token.address);
+
   });
 
-  it("Create proposal and cast votes", async function () {
+  it("Transfer votes", async function () {
     const Token = await ethers.getContractFactory("Token")
     const name = "TestToken";
     const symbol = "TT";
+
     const token1 = await Token.deploy(name, symbol);
     await token1.deployed();
 
-    // const tokenAddress = token1.address ;
-    // const [owner, account1] = await ethers.getSigners();
+    const [owner, account1, account2] = await ethers.getSigners();
+
+    await token1.delegate(account1.address);
+    await token1.mint(account1.address, 200);
+    // console.log(await token1.getVotes(account1.address));
+    
+    await token1.connect(account2).delegate(account2.address);
+   
+    await token1.mint(account2.address, 250);
+    // console.log(await token1.getVotes(account2.address));
+
+    await token1.connect(owner).delegate(owner.address);
+    
+    await token1.mint(owner.address, 300);
+    console.log(await token1.getVotes(owner.address));
+    await token1.afterTokenTransfer(owner.address, account1.address, 100);
+    console.log(await token1.getVotes(account1.address));
+
+    
+    
+
     // const token2 = await ethers.getContractAt("ERC20", tokenAddress);
     // const teamAddress = account1.address;
     // const grantAmount = 0;
@@ -65,7 +83,6 @@ describe("DAO", function () {
 //     await factory.deployed();
 
 //     await factory.createToken("Sample token", "SAMP");
-
 //     const mytokens = await factory.getTokens();
 //     console.log(mytokens);
 //   });
