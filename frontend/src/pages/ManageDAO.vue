@@ -41,7 +41,7 @@ async function transferTokens() {
     if (tokenContract) {
       await tokenContract.transfer(
         transfer.address,
-        ethers.utils.parseEther(transfer.amount),
+        ethers.utils.parseEther(transfer.amount)
       );
     }
     console.log("Done");
