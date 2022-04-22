@@ -26,7 +26,7 @@ describe("LowPoly Factories", function () {
     
     await Promise.all(
       tokenList.map(async (token) => {
-        return factory.createToken(token.name, token.symbol);
+        return factory.createToken(token.name, token.symbol, 3000);
       })
     );
 
