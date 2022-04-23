@@ -53,3 +53,69 @@ describe("Token", async function () {
     console.log(await token1.balanceOf(accountx.address));
 });
 });
+
+describe("Creating and Executing Proposals", async function () {
+  it("Get proposal id", async function () {
+    const Token = await ethers.getContractFactory("Token");
+    const name = "TestToken";
+    const symbol = "TT";
+    const [owner] = await ethers.getSigners();
+    const token1 = await Token.deploy(name, symbol, 2000, owner.address);
+    await token1.deployed();
+   
+    const DAO = await ethers.getContractFactory("DAO");
+    const DAO1 = await DAO.deploy("Devs4shah", token1.address);
+    await DAO1.deployed();
+   
+    const tokenAddress = token1.address;
+    const token2 = await ethers.getContractAt("ERC20", tokenAddress);
+   
+    const OwnerAddress = owner.address;
+    const grantAmount = 0;
+    const transferCalldata = token2.interface.encodeFunctionData("transfer", [
+      OwnerAddress,
+      grantAmount,
+    ]);
+
+    console.log(
+      await DAO1.propose(
+        [tokenAddress],
+        [0],
+        [transferCalldata],
+        "Proposal #1: Give grant to team"
+      )
+    );
+  })
+
+  it("Cast a vote to a proposal", async function () {
+    const Token = await ethers.getContractFactory("Token");
+    const name = "TestToken";
+    const symbol = "TT";
+    const [owner] = await ethers.getSigners();
+    const token1 = await Token.deploy(name, symbol, 2000, owner.address);
+    await token1.deployed();
+   
+    const DAO = await ethers.getContractFactory("DAO");
+    const DAO1 = await DAO.deploy("Devs4shah", token1.address);
+    await DAO1.deployed();
+   
+    const tokenAddress = token1.address;
+    const token2 = await ethers.getContractAt("ERC20", tokenAddress);
+   
+    const OwnerAddress = owner.address;
+    const grantAmount = 0;
+    const transferCalldata = token2.interface.encodeFunctionData("transfer", [
+      OwnerAddress,
+      grantAmount,
+    ]);
+
+    const pid = await DAO1.propose(
+      [tokenAddress],
+      [0],
+      [transferCalldata],
+      "Proposal #1: Give grant to team"
+    );
+    
+    console.log("Proposal id:", await pid.wait(1));
+  })
+})

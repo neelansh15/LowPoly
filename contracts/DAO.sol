@@ -22,14 +22,14 @@ contract DAO is
     GovernorVotes,
     GovernorVotesQuorumFraction
 {
-    constructor(string memory name, IVotes _token)
+    constructor(string memory name, IVotes token)
         Governor(name)
         GovernorSettings(
             1, /* 1 block */
             45818, /* 1 week */
             0
         )
-        GovernorVotes(_token)
+        GovernorVotes(token)
         GovernorVotesQuorumFraction(4)
     {}
 
