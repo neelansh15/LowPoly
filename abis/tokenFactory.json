@@ -1,1 +1,36 @@
-{"address":"0xc97E075F6713134dBD7217584b083f45801D0838","abi":[{"type":"event","anonymous":false,"name":"NewToken","inputs":[{"type":"address","name":"_tokenAddress","indexed":false},{"type":"string","name":"_name","indexed":false},{"type":"string","name":"_symbol","indexed":false}]},{"type":"function","name":"createToken","constant":false,"payable":false,"inputs":[{"type":"string","name":"name"},{"type":"string","name":"symbol"},{"type":"uint256","name":"totalSupply"}],"outputs":[{"type":"address"}]},{"type":"function","name":"getTokens","constant":true,"stateMutability":"view","payable":false,"inputs":[],"outputs":[{"type":"address[]"}]}]}
+{
+  "address": "0xc97E075F6713134dBD7217584b083f45801D0838",
+  "abi": [
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "NewToken",
+      "inputs": [
+        { "type": "address", "name": "_tokenAddress", "indexed": false },
+        { "type": "string", "name": "_name", "indexed": false },
+        { "type": "string", "name": "_symbol", "indexed": false }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "createToken",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        { "type": "string", "name": "name" },
+        { "type": "string", "name": "symbol" },
+        { "type": "uint256", "name": "totalSupply" }
+      ],
+      "outputs": [{ "type": "address" }]
+    },
+    {
+      "type": "function",
+      "name": "getTokens",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [{ "type": "address[]" }]
+    }
+  ]
+}

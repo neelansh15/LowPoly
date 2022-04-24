@@ -28,9 +28,16 @@ async function delegateVotes() {
   const tokenContract = useTokenContract();
   try {
     if (tokenContract) {
-      await tokenContract.delegate(delegate.address);
+      await tokenContract.delegate(delegate.address, {
+        gasLimit: 9022680,
+      });
     }
     console.log("Done");
+    console.log(
+      await tokenContract.getVotes(
+        "0x08DcE649f86AF45dA8648FaD31D1C33A617C52d1",
+      ),
+    );
   } catch (e: any) {
     console.log(e.message);
   }
@@ -42,6 +49,9 @@ async function transferTokens() {
       await tokenContract.transfer(
         transfer.address,
         ethers.utils.parseEther(transfer.amount),
+        {
+          gasLimit: 9023256,
+        },
       );
     }
     console.log("Done");
@@ -96,6 +106,14 @@ async function init() {
         <PrimaryButton class="ml-3" type="button" @click="delegateVotes">
           Delegate votes
         </PrimaryButton>
+      </form>
+    </div>
+    <div class="p-10">
+      <b>Proposals</b>
+      <form action="">
+        <router-link to="/create/proposal">
+          <PrimaryButton> Create a proposal </PrimaryButton>
+        </router-link>
       </form>
     </div>
   </div>

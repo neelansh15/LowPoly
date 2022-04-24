@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../pages/Home.vue";
 import CreateDAO from "../pages/create/CreateDAO.vue";
 import CreateToken from "../pages/create/CreateToken.vue";
+import CreateProposal from "../pages/create/CreateProposal.vue";
 import ManageDAO from "../pages/ManageDAO.vue";
 
 const routes = [
@@ -21,6 +22,10 @@ const routes = [
   {
     component: CreateToken,
     path: "/create/token",
+  },
+  {
+    component: CreateProposal,
+    path: "/create/proposal",
   },
   {
     component: ManageDAO,

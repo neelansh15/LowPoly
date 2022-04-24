@@ -26,6 +26,7 @@ async function createDAO() {
       );
       result.wait(1).then(() => {
         console.log("Done");
+        console.log(DAOFactoryContract.getDAOs());
       });
     }
   } catch (e: any) {
