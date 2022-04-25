@@ -1,5 +1,5 @@
 {
-  "address": "0xBeC8cb1957443E2B39aC0A602f9eB38EDE74dDB4",
+  "address": "0x3fd1b367140e6610C8BbdBe025912aCda0E94e2d",
   "abi": [
     {
       "type": "event",
@@ -21,7 +21,7 @@
     },
     {
       "type": "function",
-      "name": "createDAO",
+      "name": "createDao",
       "constant": false,
       "payable": false,
       "inputs": [
