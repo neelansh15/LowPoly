@@ -17,7 +17,7 @@ const walletConnected = ref(false);
 // const address = computed(() => useWeb3Store.ad);
 // const chainId = ref(0);
 
-const { address, chainId } = storeToRefs(useWeb3Store());
+const { address, chainId, web3provider } = storeToRefs(useWeb3Store());
 const init = async () => {
   const provider = window.ethereum;
 
@@ -50,6 +50,7 @@ async function connectWallet() {
   const accounts = await web3Provider.send("eth_requestAccounts", []);
 
   const network = await web3Provider.getNetwork();
+  wallet.setWeb3provider(web3Provider);
   wallet.setChainId(network.chainId);
   const signer = web3Provider.getSigner();
   wallet.setAddress(await signer.getAddress());
@@ -74,7 +75,7 @@ async function connectWallet() {
   provider.on("chainChanged", chainChanged);
 
   function disconnect() {
-    console.log("disconnecr");
+    console.log("disconnect");
     wallet.updateWeb3Wallet(null, null, null);
     provider.removeListener("accountsChanged", accountsChanged);
     provider.removeListener("disconnect", disconnect);

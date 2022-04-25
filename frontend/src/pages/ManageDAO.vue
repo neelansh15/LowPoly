@@ -7,7 +7,7 @@ import { useTokenContract } from "~/utils/useContract";
 import PrimaryButton from "~/components/PrimaryButton.vue";
 import { storeToRefs } from "pinia";
 import { useWeb3Store } from "../store/web3Store";
-const { address, chainId } = storeToRefs(useWeb3Store());
+const { address, chainId, web3provider } = storeToRefs(useWeb3Store());
 
 onMounted(init);
 
@@ -26,6 +26,7 @@ const transfer = reactive({
 
 async function delegateVotes() {
   const tokenContract = useTokenContract();
+
   try {
     if (tokenContract) {
       await tokenContract.delegate(delegate.address, {

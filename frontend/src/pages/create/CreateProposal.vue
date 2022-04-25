@@ -6,46 +6,82 @@ import SecondaryButton from "../../components/SecondaryButton.vue";
 import { useDAOFactoryContract } from "~/utils/useContract";
 import { storeToRefs } from "pinia";
 import { useWeb3Store } from "../../store/web3Store";
-import { reactive } from "vue";
-const { address, chainId } = storeToRefs(useWeb3Store());
+import { ethers } from "ethers";
+import { unref, reactive, watch, watchEffect, onMounted, provide } from "vue";
+const { address, chainId, web3provider } = storeToRefs(useWeb3Store());
 
 const proposalInfo = reactive({
   title: "",
-  subtitle: "",
   description: "",
-  proposedMoneyAllocation: "",
+  startDate: "",
+  endDate: "",
+  startBlock: "",
+  endBlock: "",
 });
 
-// const DAOInfo = reactive({
-//   name: "",
-// });
-// async function createDAO() {
-//   const DAOFactoryContract = useDAOFactoryContract();
-//   console.log(tokenInfo.address, DAOInfo.name);
-//   try {
-//     if (DAOFactoryContract) {
-//       const result = await DAOFactoryContract.createDAO(
-//         DAOInfo.name,
-//         tokenInfo.address,
-//       );
-//       result.wait(1).then(() => {
-//         console.log("Done");
-//         console.log(DAOFactoryContract.getDAOs());
-//       });
-//     }
-//   } catch (e: any) {
-//     console.log(e.message);
-//   }
-// }
-
 async function createProposal() {
-  console.log(
-    proposalInfo.title,
-    proposalInfo.subtitle,
-    proposalInfo.description,
-    proposalInfo.proposedMoneyAllocation,
-  );
+  console.log(proposalInfo.title, proposalInfo.description);
 }
+
+const convertToBlockNumber = async (targetTimestamp: any) => {
+  // decreasing average block size will decrease precision and also
+  // decrease the amount of requests made in order to find the closest
+  // block
+  let averageBlockTime = 2.5;
+  const provider =
+    web3provider || new ethers.providers.Web3Provider(window.ethereum);
+  // get current block number
+  if (!provider) {
+    console.log("No provider", provider);
+    return null;
+  }
+  console.log(provider);
+  const currentBlockNumber = await provider.value.getBlockNumber();
+  let blockNumber = currentBlockNumber;
+  let temp = parseInt(
+    blockNumber + (targetTimestamp - +new Date() / 1000) / averageBlockTime,
+  );
+  return temp;
+};
+
+watch(
+  () => proposalInfo.startDate,
+  async (newVal, oldVal) => {
+    console.log({ newVal: newVal });
+    if (proposalInfo.endDate) {
+      if (proposalInfo.startDate > proposalInfo.endDate) {
+        alert("Invalid dates");
+        proposalInfo.startDate = null;
+        return;
+      }
+    }
+    let timeStamp = new Date(newVal).getTime() / 1000;
+    let val = await convertToBlockNumber(timeStamp);
+    console.log({ val: val });
+    if (val) {
+      proposalInfo.startBlock = val;
+    }
+  },
+);
+watch(
+  () => proposalInfo.endDate,
+  async (newVal, oldVal) => {
+    console.log({ newVal: newVal });
+    if (proposalInfo.startDate) {
+      if (proposalInfo.startDate > proposalInfo.endDate) {
+        alert("Invalid dates");
+        proposalInfo.endDate = null;
+        return;
+      }
+    }
+    let timeStamp = new Date(newVal).getTime() / 1000;
+    let val = await convertToBlockNumber(timeStamp);
+    console.log({ val: val });
+    if (val) {
+      proposalInfo.endBlock = val;
+    }
+  },
+);
 </script>
 
 <template>
@@ -68,48 +104,38 @@ async function createProposal() {
         <input
           class="mt-3 space-x-2"
           type="text"
-          v-model="proposalInfo.subtitle"
-          placeholder="Subtitle for proposal"
-        />
-        <br />
-        <input
-          class="mt-3 space-x-2"
-          type="text"
           v-model="proposalInfo.description"
           placeholder="Description for proposal"
         />
         <br />
+        <label class="mr-3" for="startDate">Start date</label>
         <input
           class="mt-3 space-x-2"
-          type="text"
-          v-model="proposalInfo.proposedMoneyAllocation"
-          placeholder="Proposed money allocation"
+          id="startDate"
+          type="date"
+          v-model="proposalInfo.startDate"
+          placeholder="Start date dd/mm/yyyy"
+        />
+        <label class="ml-3 mr-3" for="endDate">End date</label>
+        <input
+          class="mt-3 ml-5 space-x-2"
+          id="endDate"
+          type="date"
+          v-model="proposalInfo.endDate"
+          placeholder="End date dd/mm/yyyy"
         />
         <br />
         <input
           class="mt-3 space-x-2"
           type="text"
-          v-model="proposalInfo.proposedMoneyAllocation"
-          placeholder="Proposed money allocation"
+          v-model="proposalInfo.startBlock"
+          placeholder="Start block"
         />
         <input
-          class="mt-3 space-x-2"
+          class="mt-3 ml-5 space-x-2"
           type="text"
-          v-model="proposalInfo.proposedMoneyAllocation"
-          placeholder="Proposed money allocation"
-        />
-        <br />
-        <input
-          class="mt-3 space-x-2"
-          type="text"
-          v-model="proposalInfo.proposedMoneyAllocation"
-          placeholder="Proposed money allocation"
-        />
-        <input
-          class="mt-3 space-x-2"
-          type="text"
-          v-model="proposalInfo.proposedMoneyAllocation"
-          placeholder="Proposed money allocation"
+          v-model="proposalInfo.endBlock"
+          placeholder="End block"
         />
 
         <div class="mt-3 space-x-2">
@@ -122,8 +148,9 @@ async function createProposal() {
     </div>
     <ProposalCard>
       <template v-slot:title> {{ proposalInfo.title }} </template>
-      <template v-slot:subtitle> {{ proposalInfo.subtitle }} </template>
       <template v-slot:description> {{ proposalInfo.description }} </template>
+      <template v-slot:startDate> {{ proposalInfo.startDate }} </template>
+      <template v-slot:endDate> {{ proposalInfo.endDate }} </template>
     </ProposalCard>
   </div>
 </template>

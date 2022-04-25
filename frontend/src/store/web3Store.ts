@@ -26,5 +26,8 @@ export const useWeb3Store = defineStore("web3", {
     setChainId(chainId: number | null) {
       this.chainId = chainId;
     },
+    setWeb3provider(provider: ethers.providers.Web3Provider | null) {
+      this.web3provider = provider;
+    },
   },
 });

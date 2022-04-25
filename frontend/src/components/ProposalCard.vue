@@ -3,11 +3,14 @@
     <h1 class="text-3xl font-bold">
       <slot name="title" class=""> </slot>
     </h1>
-    <h3>
-      <slot name="subtitle"></slot>
-    </h3>
     <p>
       <slot name="description"></slot>
+    </p>
+    <p>
+      <slot name="startDate"></slot>
+    </p>
+    <p>
+      <slot name="endDate"></slot>
     </p>
   </div>
 </template>
