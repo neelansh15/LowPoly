@@ -20,7 +20,7 @@ async function createDAO() {
   console.log(tokenInfo.address, DAOInfo.name);
   try {
     if (DAOFactoryContract) {
-      const result = await DAOFactoryContract.createDAO(
+      const result = await DAOFactoryContract.createDao(
         DAOInfo.name,
         tokenInfo.address,
       );
