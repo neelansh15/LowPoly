@@ -9,7 +9,7 @@ contract DAOFactory {
 
     event NewDAO(address _daoAddress, address _tokenAddress);
 
-    function createDAO(string memory name, IVotes tokenAddress)
+    function createDao(string memory name, IVotes tokenAddress)
         public
         returns (DAO)
     {
