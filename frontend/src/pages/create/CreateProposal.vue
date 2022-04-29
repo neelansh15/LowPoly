@@ -1,14 +1,12 @@
 <script lang="ts" setup>
 import HeaderCard from "~/components/HeaderCard.vue";
-import ProposalCard from "~/components/ProposalCard.vue";
 import PrimaryButton from "~/components/PrimaryButton.vue";
 import SecondaryButton from "../../components/SecondaryButton.vue";
-import { useDAOFactoryContract } from "~/utils/useContract";
 import { storeToRefs } from "pinia";
 import { useWeb3Store } from "../../store/web3Store";
 import { ethers } from "ethers";
-import { unref, reactive, watch, watchEffect, onMounted, provide } from "vue";
-const { address, chainId, web3provider } = storeToRefs(useWeb3Store());
+import { reactive, watch } from "vue";
+const { web3provider } = storeToRefs(useWeb3Store());
 
 const proposalInfo = reactive({
   title: "",
@@ -24,13 +22,9 @@ async function createProposal() {
 }
 
 const convertToBlockNumber = async (targetTimestamp: any) => {
-  // decreasing average block size will decrease precision and also
-  // decrease the amount of requests made in order to find the closest
-  // block
   let averageBlockTime = 2.5;
   const provider =
     web3provider || new ethers.providers.Web3Provider(window.ethereum);
-  // get current block number
   if (!provider) {
     console.log("No provider", provider);
     return null;
@@ -146,11 +140,5 @@ watch(
         </div>
       </form>
     </div>
-    <ProposalCard>
-      <template v-slot:title> {{ proposalInfo.title }} </template>
-      <template v-slot:description> {{ proposalInfo.description }} </template>
-      <template v-slot:startDate> {{ proposalInfo.startDate }} </template>
-      <template v-slot:endDate> {{ proposalInfo.endDate }} </template>
-    </ProposalCard>
   </div>
 </template>
