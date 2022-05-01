@@ -1,5 +1,5 @@
 <template>
-  <div class="m-5 p-2 bg-primary-600 text-white h-50 min-w-30 w-sm">
+  <div class="m-5 p-2 bg-primary-600 text-white h-55 min-w-30 w-sm">
     <div class="text-right mt-0">
       <h1>
         {{ proposal.status }}
@@ -31,6 +31,16 @@
       <button @click="castVote(1)">For</button>
       <button @click="castVote(2)">Abstain</button>
     </div>
+    <div class="mt-3 flex justify-between items-center">
+      <h1>Against</h1>
+      <h1>For</h1>
+      <h1>Abstain</h1>
+    </div>
+    <div class="mt-3 flex justify-between items-center">
+      <h1>{{ proposal.against }}</h1>
+      <h1>{{ proposal.for }}</h1>
+      <h1>{{ proposal.abstained }}</h1>
+    </div>
   </div>
 </template>
 
@@ -57,6 +67,9 @@ let proposalStatus = [
 const proposal = reactive({
   hasVoted: false,
   status: proposalStatus[stateIndex.value],
+  for: 0,
+  against: 0,
+  abstained: 0,
 });
 
 const castVote = async (val: number) => {
@@ -89,6 +102,9 @@ onMounted(async () => {
 
   const result = await DAOContract.proposalVotes(props.proposalId);
   console.log(result);
+  proposal.for = +formatEther(result.forVotes._hex);
+  proposal.against = +formatEther(result.againstVotes._hex);
+  proposal.abstained = +formatEther(result.abstainedVotes._hex);
   await new Promise(r => setTimeout(r, 500));
 });
 </script>
