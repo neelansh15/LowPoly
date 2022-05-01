@@ -8,8 +8,6 @@ contract DEX {
     // Store specific token's ether balances
     mapping(address => uint256) private _tokenBalances;
 
-    function deposit() external payable {}
-
     function getBalance() external view returns (uint256) {
         return address(this).balance;
     }
