@@ -5,6 +5,9 @@ import "./Token.sol";
 import "hardhat/console.sol";
 
 contract DEX {
+    // Store specific token's ether balances
+    mapping(address => uint256) private _tokenBalances;
+
     function deposit() external payable {}
 
     // DEX functions
@@ -16,18 +19,46 @@ contract DEX {
             token.balanceOf(address(this)) > amount,
             "Insufficient funds in contract"
         );
+        _tokenBalances[tokenAddress] = _tokenBalances[tokenAddress] + amount;
         token.transfer(msg.sender, amount);
     }
 
-    // Needs approval to spend first (need to be done on the frontend)
-    function sell(address tokenAddress, uint256 amount) external {
-        Token token = Token(tokenAddress);
-        require(msg.sender == token.owner(), "Only token owner is allowed");
+    // How much ether is collected for a token
+    function tokenEtherBalance(address tokenAddress)
+        external
+        view
+        returns (uint256)
+    {
+        return _tokenBalances[tokenAddress];
+    }
+
+    // Withdraw token funds to owner of non-profit (token owner)
+    function withdraw(address tokenAddress, uint256 amount) external {
         require(
-            address(this).balance > amount,
-            "Insufficient funds in DEX contract"
+            _tokenBalances[tokenAddress] >= amount,
+            "Insufficient ether balance for token"
         );
-        token.transferFrom(msg.sender, address(this), amount);
+
+        Token token = Token(tokenAddress);
+        require(
+            msg.sender == token.owner(),
+            "Only token owner can withdraw funds"
+        );
+
+        _tokenBalances[tokenAddress] = _tokenBalances[tokenAddress] - amount;
+        msg.sender.call{value: amount};
+    }
+
+    // Withdraw all token funds to owner of non-profit (token owner)
+    function withdrawAll(address tokenAddress) external {
+        Token token = Token(tokenAddress);
+        require(
+            msg.sender == token.owner(),
+            "Only token owner can withdraw funds"
+        );
+
+        uint256 amount = _tokenBalances[tokenAddress];
+        _tokenBalances[tokenAddress] = _tokenBalances[tokenAddress] - amount;
         msg.sender.call{value: amount};
     }
 }
