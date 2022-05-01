@@ -1,11 +1,13 @@
 {
-  "address": "0x3fd1b367140e6610C8BbdBe025912aCda0E94e2d",
+  "address": "0xB926CC65E88c41C4738807D9b0Fee2281d8e211A",
   "abi": [
+    { "type": "constructor", "payable": false, "inputs": [] },
     {
       "type": "event",
       "anonymous": false,
       "name": "NewDAO",
       "inputs": [
+        { "type": "string", "name": "name", "indexed": false },
         { "type": "address", "name": "_daoAddress", "indexed": false },
         { "type": "address", "name": "_tokenAddress", "indexed": false }
       ]
@@ -38,6 +40,15 @@
       "payable": false,
       "inputs": [],
       "outputs": [{ "type": "address[]" }]
+    },
+    {
+      "type": "function",
+      "name": "startBlock",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [{ "type": "uint256" }]
     }
   ]
 }

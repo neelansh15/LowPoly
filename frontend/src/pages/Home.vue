@@ -14,13 +14,15 @@ const daos = ref([] as any[]);
 
 onMounted(async () => {
   const DAOFactoryContract = useDAOFactoryContract();
+  // const startBlock = (await DAOFactoryContract.startBlock()).toString();
+  // console.log("startBlock", startBlock);
   const filters = await DAOFactoryContract.filters.NewDAO();
   const logs = await DAOFactoryContract.queryFilter(
     filters,
-    26077084,
-    "latest",
+    26159130,
+    "latest"
   );
-  const events = logs.map(log => DAOFactoryContract.interface.parseLog(log));
+  const events = logs.map((log) => DAOFactoryContract.interface.parseLog(log));
   console.log("GOT EVENTS");
   daos.value = await Promise.all(
     events.map(async (event: any) => {
@@ -36,9 +38,9 @@ onMounted(async () => {
       const DAOtoken = await DAOContract.token();
       const TokenContract = useTokenContract(DAOtoken);
       obj.token = await TokenContract.name();
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 500));
       return obj;
-    }),
+    })
   );
 });
 </script>
@@ -60,14 +62,14 @@ onMounted(async () => {
         <PrimaryButton> Account </PrimaryButton>
       </router-link>
     </div>
-    <div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <router-link
         v-for="dao in daos"
         :key="dao.name"
-        class="ml-3"
+        class="mx-3"
         :to="'/dao/' + dao.address"
       >
-        <DAOCard>
+        <DAOCard class="mt-3">
           <template v-slot:name> {{ dao.name }} </template>
           <template v-slot:token> {{ dao.token }} </template>
         </DAOCard>

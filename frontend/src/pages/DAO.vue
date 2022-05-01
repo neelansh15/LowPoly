@@ -2,14 +2,20 @@
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import HeaderCard from "~/components/HeaderCard.vue";
-import { useDAOContract, useTokenContract } from "~/utils/useContract";
+import {
+  useDAOContract,
+  useDEXContract,
+  useTokenContract,
+} from "~/utils/useContract";
 import PrimaryButton from "~/components/PrimaryButton.vue";
 import ProposalCard from "~/components/ProposalCard.vue";
 import { ethers } from "ethers";
 import { storeToRefs } from "pinia";
 import { useWeb3Store } from "../store/web3Store";
+import { parseEther } from "@ethersproject/units";
 const { web3provider } = storeToRefs(useWeb3Store());
 
+let quantity = ref("");
 let dao = ref({
   name: "",
   address: "",
@@ -18,11 +24,23 @@ let dao = ref({
   tokenSymbol: "",
 });
 
+const buyTokens = async () => {
+  const amount = parseEther(quantity.value.toString());
+  const dex = useDEXContract();
+  const result = await dex.buy(dao.value.tokenAddress, {
+    value: amount,
+  });
+  console.log("Buy transaction started at ", result.hash);
+  result.wait(1).then(() => {
+    console.log("Buy transaction completed");
+  });
+};
+
 const proposals = ref([] as any[]);
 onMounted(async () => {
   // getting details
   const route = useRoute();
-  const address = route.params.address;
+  const address = route.params.address as string;
   dao.value.address = address;
   const DAOContract = useDAOContract(address);
   dao.value.name = await DAOContract.name();
@@ -33,9 +51,9 @@ onMounted(async () => {
 
   const filters = await DAOContract.filters.ProposalCreated();
   const logs = await DAOContract.queryFilter(filters, 26078840, "latest");
-  const events = logs.map(log => DAOContract.interface.parseLog(log));
+  const events = logs.map((log) => DAOContract.interface.parseLog(log));
   console.log("EVENTS:", events);
-  proposals.value = events.map(e => {
+  proposals.value = events.map((e) => {
     let obj = {
       title: e.args.description.split("$$")[0],
       description: e.args.description.split("$$")[1],
@@ -54,7 +72,7 @@ onMounted(async () => {
         <h1 class="font-bold text-7xl">{{ dao.name }}</h1>
         <p class="mt-2 text-gray-100">{{ dao.address }}</p>
       </div>
-      <div>
+      <div class="bg-teal-700 p-5">
         <div class="flex">
           <p class="text-3xl">
             {{ dao.token }}
@@ -66,6 +84,15 @@ onMounted(async () => {
         <p>
           {{ dao.tokenAddress }}
         </p>
+        <div class="flex items-center">
+          <input
+            type="text"
+            class="max-h-6 text-black"
+            v-model="quantity"
+            placeholder="Quantity of tokens to buy"
+          />
+          <button class="ml-2 px-2" @click="buyTokens">Buy</button>
+        </div>
       </div>
     </HeaderCard>
     <div class="mx-5 flex justify-between items-center">
@@ -76,7 +103,9 @@ onMounted(async () => {
         </router-link>
       </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div
+      class="w-screen grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+    >
       <ProposalCard
         v-for="proposal in proposals"
         :key="proposal.title"

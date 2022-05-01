@@ -1,5 +1,5 @@
 <template>
-  <div class="m-5 p-10 bg-primary-600 text-white h-50 min-w-30 w-sm">
+  <div class="m-5 p-2 bg-primary-600 text-white h-50 min-w-30 w-sm">
     <div class="text-right mt-0">
       <h1>
         {{ proposal.status }}
@@ -65,9 +65,13 @@ const castVote = async (val: number) => {
     gasLimit: 9023640,
   });
   console.log(result);
-  result.wait(1, () => {
+  result.wait(1, async () => {
     alert("casted vote");
+    const result2 = await DAOContract.proposalVotes(props.proposalId);
+    console.log(result2);
   });
+  const result2 = await DAOContract.proposalVotes(props.proposalId);
+  console.log(result2);
 };
 
 onMounted(async () => {
@@ -78,10 +82,17 @@ onMounted(async () => {
   );
   stateIndex.value = await DAOContract.state(props.proposalId);
   proposal.status = proposalStatus[stateIndex.value];
+<<<<<<< HEAD
   console.log(await DAOContract.proposalVotes(props.proposalId));
+=======
+>>>>>>> b0e223fe9ffa1b1f60372ebbd5e36e78b597b63d
   const tokenAddress = await DAOContract.token();
   const TokenContract = useTokenContract(tokenAddress);
   let balance = await TokenContract.balanceOf(address.value);
   userBalance.value = +formatEther(balance.toString());
+
+  const result = await DAOContract.proposalVotes(props.proposalId);
+  console.log(result);
+  await new Promise(r => setTimeout(r, 500));
 });
 </script>

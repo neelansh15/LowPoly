@@ -1,5 +1,5 @@
 <template>
-  <div class="m-5 p-10 bg-primary-600 text-white max-h-50">
+  <div class="ml-auto p-10 bg-primary-600 text-white max-h-50 max-w-auto">
     <h1 class="text-3xl text-center font-bold">
       <slot name="name"></slot>
     </h1>

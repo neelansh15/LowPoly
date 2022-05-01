@@ -1,12 +1,11 @@
 {
-  "address": "0x204878fA5fE54A351c99eCA5DC80f4D470E428c6",
   "abi": [
     {
       "type": "constructor",
       "payable": false,
       "inputs": [
         { "type": "string", "name": "name" },
-        { "type": "address", "name": "_token" }
+        { "type": "address", "name": "token" }
       ]
     },
     {
@@ -338,6 +337,16 @@
       "gas": 29000000,
       "inputs": [{ "type": "uint256", "name": "newVotingPeriod" }],
       "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "startBlock",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "gas": 29000000,
+      "inputs": [],
+      "outputs": [{ "type": "uint256" }]
     },
     {
       "type": "function",
