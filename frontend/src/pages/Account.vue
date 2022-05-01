@@ -138,7 +138,7 @@ async function withdrawAll(tokenAddress: string) {
           />
           <input
             class="ml-3"
-            type="text"
+            type="number"
             v-model="transfer.amount"
             placeholder="Amount"
           />
