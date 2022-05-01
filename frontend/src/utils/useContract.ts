@@ -22,7 +22,7 @@ export function useTokenContract(address: string, useAlchemy = false) {
   const tokenContract = useContract(
     address,
     tokenData.abi,
-    useAlchemy ? alchemyProvider : null
+    useAlchemy ? alchemyProvider : null,
   );
   return tokenContract;
 }
@@ -32,28 +32,28 @@ export function useDAOContract(address: string, useAlchemy = false) {
   const DAOContract = useContract(
     address,
     DAOData.abi,
-    useAlchemy ? alchemyProvider : null
+    useAlchemy ? alchemyProvider : null,
   );
   return DAOContract;
 }
 
-export function useTokenFactoryContract() {
+export function useTokenFactoryContract(useAlchemy = false) {
   const { alchemyProvider } = useWeb3Store();
   const tokenFactoryContract = useContract(
     tokenFactoryData.address,
     tokenFactoryData.abi,
-    alchemyProvider
+    useAlchemy ? alchemyProvider : null,
   );
   return tokenFactoryContract;
 }
 
-export function useDAOFactoryContract() {
+export function useDAOFactoryContract(useAlchemy = false) {
   const { alchemyProvider } = useWeb3Store();
 
   const DAOFactoryContract = useContract(
     DAOFactoryData.address,
     DAOFactoryData.abi,
-    alchemyProvider
+    useAlchemy ? alchemyProvider : null,
   );
   return DAOFactoryContract;
 }
