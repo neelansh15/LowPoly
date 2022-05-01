@@ -18,11 +18,11 @@ const proposalInfo = reactive({
   description: "",
   startDate: "",
   endDate: "",
-  startBlock: "",
-  endBlock: "",
+  startBlock: -1,
+  endBlock: -1,
 });
 const route = useRoute();
-const DAOaddress = route.params.address;
+const DAOaddress = route.params.address as string;
 
 const account = reactive({
   balance: "",
@@ -51,7 +51,7 @@ async function createProposal() {
   const TokenContract = useTokenContract(tokenAddress);
   const transferCalldata = TokenContract.interface.encodeFunctionData(
     "transfer",
-    [OwnerAddress, grantAmount],
+    [OwnerAddress, grantAmount]
   );
   console.log("CREATE PROPOSAL");
   let proposalDescription =
@@ -64,7 +64,7 @@ async function createProposal() {
     proposalDescription,
     {
       gasLimit: 9027672,
-    },
+    }
   );
 
   console.log("RESULT:", result);
@@ -75,61 +75,61 @@ async function createProposal() {
   });
 }
 
-const convertToBlockNumber = async (targetTimestamp: any) => {
-  let averageBlockTime = 2.5;
-  const provider =
-    web3provider || new ethers.providers.Web3Provider(window.ethereum);
-  if (!provider) {
-    console.log("No provider", provider);
-    return null;
-  }
-  console.log(provider);
-  const currentBlockNumber = await provider.value.getBlockNumber();
-  let blockNumber = currentBlockNumber;
-  let temp = parseInt(
-    blockNumber + (targetTimestamp - +new Date() / 1000) / averageBlockTime,
-  );
-  return temp;
-};
+// const convertToBlockNumber = async (targetTimestamp: any) => {
+//   let averageBlockTime = 2.5;
+//   const provider =
+//     web3provider || new ethers.providers.Web3Provider(window.ethereum);
+//   if (!provider.value) {
+//     console.log("No provider", provider);
+//     return null;
+//   }
+//   console.log(provider);
+//   const currentBlockNumber = await provider.value.getBlockNumber();
+//   let blockNumber = currentBlockNumber;
+//   let temp = parseInt(
+//     blockNumber + (targetTimestamp - +new Date() / 1000) / averageBlockTime
+//   );
+//   return temp;
+// };
 
-watch(
-  () => proposalInfo.startDate,
-  async (newVal, oldVal) => {
-    console.log({ newVal: newVal });
-    if (proposalInfo.endDate) {
-      if (proposalInfo.startDate > proposalInfo.endDate) {
-        alert("Invalid dates");
-        proposalInfo.startDate = null;
-        return;
-      }
-    }
-    let timeStamp = new Date(newVal).getTime() / 1000;
-    let val = await convertToBlockNumber(timeStamp);
-    console.log({ val: val });
-    if (val) {
-      proposalInfo.startBlock = val;
-    }
-  },
-);
-watch(
-  () => proposalInfo.endDate,
-  async (newVal, oldVal) => {
-    console.log({ newVal: newVal });
-    if (proposalInfo.startDate) {
-      if (proposalInfo.startDate > proposalInfo.endDate) {
-        alert("Invalid dates");
-        proposalInfo.endDate = null;
-        return;
-      }
-    }
-    let timeStamp = new Date(newVal).getTime() / 1000;
-    let val = await convertToBlockNumber(timeStamp);
-    console.log({ val: val });
-    if (val) {
-      proposalInfo.endBlock = val;
-    }
-  },
-);
+// watch(
+//   () => proposalInfo.startDate,
+//   async (newVal, oldVal) => {
+//     console.log({ newVal: newVal });
+//     if (proposalInfo.endDate) {
+//       if (proposalInfo.startDate > proposalInfo.endDate) {
+//         alert("Invalid dates");
+//         proposalInfo.startDate = null;
+//         return;
+//       }
+//     }
+//     let timeStamp = new Date(newVal).getTime() / 1000;
+//     let val = await convertToBlockNumber(timeStamp);
+//     console.log({ val: val });
+//     if (val) {
+//       proposalInfo.startBlock = val;
+//     }
+//   }
+// );
+// watch(
+//   () => proposalInfo.endDate,
+//   async (newVal, oldVal) => {
+//     console.log({ newVal: newVal });
+//     if (proposalInfo.startDate) {
+//       if (proposalInfo.startDate > proposalInfo.endDate) {
+//         alert("Invalid dates");
+//         proposalInfo.endDate = null;
+//         return;
+//       }
+//     }
+//     let timeStamp = new Date(newVal).getTime() / 1000;
+//     let val = await convertToBlockNumber(timeStamp);
+//     console.log({ val: val });
+//     if (val) {
+//       proposalInfo.endBlock = val;
+//     }
+//   }
+// );
 </script>
 
 <template>
@@ -137,19 +137,25 @@ watch(
     <HeaderCard>
       <h1 class="text-7xl font-bold">Create a proposal for {{ DAO.name }}</h1>
     </HeaderCard>
-    <div class="mt-3 ml-3">
-      <h1 class="text-xl font-bold">Proposal threshold: {{ DAO.threshold }}</h1>
-      <h1 class="text-xl font-bold">Your balance: {{ account.balance }}</h1>
+    <div class="m-6 p-5 bg-dark-100 w-auto inline-block rounded-lg inline-flex space-x-5 items-center">
+      <div>
+        <h5 class="text-sm">Proposal threshold</h5>
+        <h2 class="text-2xl font-light">{{ DAO.threshold }}</h2>
+      </div>
+       <div>
+        <h5 class="text-sm">Your balance</h5>
+        <h2 class="text-2xl">{{ account.balance }}</h2>
+      </div>
     </div>
-    <div class="p-10">
+    <div class="mx-6 my-3 p-5 bg-dark-100 rounded-lg" style="width: fit-content">
       <form @submit.prevent="createProposal">
-        <b>Fill the details:</b>
+        <b>Create proposal</b>
         <br />
         <input
           class="mt-3 space-x-2"
           type="text"
           v-model="proposalInfo.title"
-          placeholder="Title for proposal"
+          placeholder="Title"
           required="true"
         />
         <br />
@@ -157,7 +163,7 @@ watch(
           class="mt-3 space-x-2"
           type="text"
           v-model="proposalInfo.description"
-          placeholder="Description for proposal"
+          placeholder="Description"
           required="true"
         />
         <br />

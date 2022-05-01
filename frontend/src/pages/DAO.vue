@@ -51,9 +51,9 @@ onMounted(async () => {
 
   const filters = await DAOContract.filters.ProposalCreated();
   const logs = await DAOContract.queryFilter(filters, 26078840, "latest");
-  const events = logs.map(log => DAOContract.interface.parseLog(log));
+  const events = logs.map((log) => DAOContract.interface.parseLog(log));
   console.log("EVENTS:", events);
-  proposals.value = events.map(e => {
+  proposals.value = events.map((e) => {
     let obj = {
       title: e.args.description.split("$$")[0],
       description: e.args.description.split("$$")[1],
@@ -72,24 +72,24 @@ onMounted(async () => {
         <h1 class="font-bold text-7xl">{{ dao.name }}</h1>
         <p class="mt-2 text-gray-100">{{ dao.address }}</p>
       </div>
-      <div class="bg-teal-700 p-5">
-        <div class="flex">
-          <p class="text-3xl">
+      <div class="bg-primary-700 p-5 rounded-lg">
+        <div class="flex items-center justify-between">
+          <h1 class="text-3xl">
             {{ dao.token }}
-          </p>
-          <p class="ml-3 text-xl">
+          </h1>
+          <p class="ml-3 text-sm bg-white text-primary-600 px-2 py-1 rounded-lg">
             {{ dao.tokenSymbol }}
           </p>
         </div>
-        <p>
+        <p class="mt-0.5 text-primary-200 text-sm">
           {{ dao.tokenAddress }}
         </p>
-        <div class="flex items-center">
+        <div class="mt-2 flex items-center">
           <input
-            type="text"
-            class="max-h-6 text-black"
+            type="number"
+            class="max-h-6 text-white text-sm bg-primary-600 hover:opacity-90 p-2 rounded focus:(outline-none ring-2 ring-primary-500) placeholder-primary-300 transition"
             v-model="quantity"
-            placeholder="Quantity of tokens to buy"
+            placeholder="Amount"
           />
           <button class="ml-2 px-2" @click="buyTokens">Buy</button>
         </div>

@@ -70,7 +70,7 @@ async function transferTokens(address: string) {
         ethers.utils.parseEther(transfer.amount),
         {
           gasLimit: 9023256,
-        },
+        }
       );
       result.wait(1, () => {
         alert("Transferred tokens");
@@ -85,10 +85,18 @@ async function transferTokens(address: string) {
 <template>
   <div>
     <HeaderCard>
-      <h1 class="text-7xl font-bold">Account</h1>
+      <div class="flex justify-between items-end">
+        <div>
+          <h1 class="text-7xl font-bold">Account</h1>
+          <h2 class="mt-2 text-primary-200">{{ address }}</h2>
+        </div>
+        <div>
+          <h4 class="text-sm font-bold">DEX Address</h4>
+          <h3 class="text-sm text-primary-200">{{ dexAddress }}</h3>
+        </div>
+      </div>
     </HeaderCard>
     <div class="p-5">
-      <p>DEX Address: {{ dexAddress }}</p>
       <div class="p-10">
         <b>Transfer tokens</b>
         <form action="transferTokens">

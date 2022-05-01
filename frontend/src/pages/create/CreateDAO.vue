@@ -24,6 +24,7 @@ async function createDAO() {
   console.log(tokenInfo.address, DAOInfo.name);
   try {
     if (DAOFactoryContract) {
+      console.log("about to create")
       const TokenContract = useTokenContract(tokenInfo.address, true);
       tokenInfo.name = await TokenContract.name();
       const result = await DAOFactoryContract.createDao(

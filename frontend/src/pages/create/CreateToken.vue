@@ -44,7 +44,7 @@ async function createToken() {
       <h1 class="text-7xl font-bold">Create a Token</h1>
     </HeaderCard>
 
-    <div class="p-10">
+    <div class="p-3 mt-8">
       <form @submit.prevent="">
         <input
           class="ml-3"
@@ -71,7 +71,7 @@ async function createToken() {
           <SecondaryButton type="reset">Reset</SecondaryButton>
           <p class="mt-3 text-gray-500">
             Already have a token?
-            <router-link to="/create/dao"> Create a DAO </router-link>
+            <router-link to="/create/dao" class="underline transition hover:text-gray-400"> Create a DAO </router-link>
           </p>
         </div>
       </form>

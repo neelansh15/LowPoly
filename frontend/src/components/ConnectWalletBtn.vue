@@ -1,12 +1,3 @@
-<template>
-  <div v-if="walletConnected && address">
-    {{ address.slice(0, 5) + "..." + address.slice(38, 42) }}
-  </div>
-  <div v-else>
-    <button @click="connectWallet">Connect to Wallet</button>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ethers } from "ethers";
 import { storeToRefs } from "pinia";
@@ -88,5 +79,14 @@ async function connectWallet() {
   walletConnected.value = true;
 }
 </script>
+
+<template>
+  <div v-if="walletConnected && address" class="bg-white text-primary-500 rounded-lg px-2.5 py-1.5 text-xs">
+    {{ address.slice(0, 6) + "..." + address.slice(address.length - 6, address.length) }}
+  </div>
+  <div v-else>
+    <button @click="connectWallet">Connect to Wallet</button>
+  </div>
+</template>
 
 <style></style>

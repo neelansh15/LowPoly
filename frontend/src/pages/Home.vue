@@ -11,8 +11,10 @@ import PrimaryButton from "../components/PrimaryButton.vue";
 import DAOCard from "../components/DAOCard.vue";
 
 const daos = ref([] as any[]);
+const loading = ref(true);
 
 onMounted(async () => {
+  loading.value = true;
   const DAOFactoryContract = useDAOFactoryContract(true);
   // const startBlock = (await DAOFactoryContract.startBlock()).toString();
   // console.log("startBlock", startBlock);
@@ -20,9 +22,9 @@ onMounted(async () => {
   const logs = await DAOFactoryContract.queryFilter(
     filters,
     26161202,
-    "latest",
+    "latest"
   );
-  const events = logs.map(log => DAOFactoryContract.interface.parseLog(log));
+  const events = logs.map((log) => DAOFactoryContract.interface.parseLog(log));
   console.log("GOT EVENTS");
   daos.value = await Promise.all(
     events.map(async (event: any) => {
@@ -36,11 +38,12 @@ onMounted(async () => {
       obj.address = address;
       obj.name = await DAOContract.name();
       console.log(obj.name);
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 500));
       obj.token = await DAOContract.tokenName();
       return obj;
-    }),
+    })
   );
+  loading.value = false;
 });
 </script>
 
@@ -53,26 +56,25 @@ onMounted(async () => {
       </p>
     </HeaderCard>
 
-    <div class="p-10">
-      <router-link to="/create/dao">
-        <PrimaryButton> Create a DAO </PrimaryButton>
-      </router-link>
-      <router-link class="ml-3" to="/account">
-        <PrimaryButton> Account </PrimaryButton>
-      </router-link>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      <router-link
-        v-for="dao in daos"
-        :key="dao.name"
-        class="mx-3"
-        :to="'/dao/' + dao.address"
+    <div v-if="loading" class="px-6 py-2">Loading...</div>
+
+    <div v-else class="mx-3 mt-8">
+      <h2 class="mx-3 text-2xl font-bold">Latest DAOs</h2>
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
-        <DAOCard class="mt-3">
-          <template v-slot:name> {{ dao.name }} </template>
-          <template v-slot:token> {{ dao.token }} </template>
-        </DAOCard>
-      </router-link>
+        <router-link
+          v-for="dao in daos"
+          :key="dao.name"
+          class="mx-3"
+          :to="'/dao/' + dao.address"
+        >
+          <DAOCard class="mt-3">
+            <template v-slot:name> {{ dao.name }} </template>
+            <template v-slot:token> {{ dao.token }} </template>
+          </DAOCard>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
