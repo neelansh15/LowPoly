@@ -7,7 +7,7 @@ contract DAOFactory {
     // Mapping of owner addresses to their created DAOs
     mapping(address => address[]) public _daos;
 
-    event NewDAO(address _daoAddress, address _tokenAddress);
+    event NewDAO(string name, address _daoAddress, address _tokenAddress);
 
     function createDao(string memory name, IVotes tokenAddress)
         public
@@ -15,7 +15,7 @@ contract DAOFactory {
     {
         DAO dao = new DAO(name, tokenAddress);
         _daos[msg.sender].push(address(dao));
-        emit NewDAO(address(dao), address(tokenAddress));
+        emit NewDAO(name, address(dao), address(tokenAddress));
         return dao;
     }
 
