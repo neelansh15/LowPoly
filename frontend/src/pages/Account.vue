@@ -20,7 +20,13 @@ const isOpen = ref([] as any[]);
 
 const dexAddress = ref(DEXData.address);
 
-onMounted(async () => {
+onMounted(() => {
+  if (!address.value) {
+    setTimeout(init, 1000);
+  } else init();
+});
+
+const init = async () => {
   // getting details
   const dexContract = useDEXContract();
   const tokenFactoryContract = useTokenFactoryContract(true);
@@ -50,7 +56,7 @@ onMounted(async () => {
     });
     isOpen.value.push(false);
   }
-});
+};
 
 const token = reactive({
   address: "",
@@ -131,7 +137,7 @@ async function withdrawAll(tokenAddress: string) {
     <div class="p-5">
       <div class="p-2 mb-6">
         <b>Transfer tokens</b>
-        <form action="transferTokens">
+        <form class="mt-1" action="transferTokens">
           <input
             type="text"
             v-model="token.address"
@@ -160,7 +166,7 @@ async function withdrawAll(tokenAddress: string) {
       </div>
       <div class="p-2 mb-6">
         <b>Delegate tokens</b>
-        <form action="delegateToken">
+        <form class="mt-1" action="delegateToken">
           <input
             type="text"
             v-model="token.address"

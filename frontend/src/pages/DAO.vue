@@ -91,7 +91,7 @@ onMounted(async () => {
             v-model="quantity"
             placeholder="Amount"
           />
-          <button class="ml-2 px-2" @click="buyTokens">Buy</button>
+          <button class="ml-2 px-2 text-xs bg-primary-600 text-primary-100 px-3.5 py-1 rounded" @click="buyTokens">Buy</button>
         </div>
       </div>
     </HeaderCard>
