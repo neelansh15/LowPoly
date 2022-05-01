@@ -3,6 +3,7 @@ import tokenData from "../../../abis/token.json";
 import tokenFactoryData from "../../../abis/tokenFactory.json";
 import DAOFactoryData from "../../../abis/daoFactory.json";
 import DAOData from "../../../abis/dao.json";
+import DEXData from "../../../abis/DEX.json";
 import { useWeb3Store } from "~/store/web3Store";
 
 export function useContract(address: string, abi: any) {
@@ -26,7 +27,7 @@ export function useDAOContract(address: string) {
 export function useTokenFactoryContract() {
   const tokenFactoryContract = useContract(
     tokenFactoryData.address,
-    tokenFactoryData.abi,
+    tokenFactoryData.abi
   );
   return tokenFactoryContract;
 }
@@ -34,7 +35,12 @@ export function useTokenFactoryContract() {
 export function useDAOFactoryContract() {
   const DAOFactoryContract = useContract(
     DAOFactoryData.address,
-    DAOFactoryData.abi,
+    DAOFactoryData.abi
   );
   return DAOFactoryContract;
+}
+
+export function useDEXContract() {
+  const DEXContract = useContract(DEXData.address, DEXData.abi);
+  return DEXContract;
 }
