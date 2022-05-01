@@ -27,7 +27,8 @@ onMounted(async () => {
   let tokenAddresses = await tokenFactoryContract.getTokensOf(address.value);
   for (let i in tokenAddresses) {
     const tokenContract = useTokenContract(tokenAddresses[i], true);
-    let tokenName = await tokenContract.name();
+    const tokenName = await tokenContract.name();
+    const tokenSymbol = await tokenContract.symbol();
     let balance = await tokenContract.balanceOf(address.value);
     balance = formatEther(balance.toString());
 
@@ -35,11 +36,17 @@ onMounted(async () => {
       await dexContract.tokenEtherBalance(tokenAddresses[i])
     );
 
+    const dexBalance = +formatEther(
+      await tokenContract.balanceOf(dexAddress.value)
+    );
+
     tokens.value.push({
       name: tokenName,
+      symbol: tokenSymbol,
       address: tokenAddresses[i],
       balance: balance,
       claimableEther,
+      dexBalance,
     });
     isOpen.value.push(false);
   }
@@ -78,7 +85,7 @@ async function transferTokens(address: string) {
     if (tokenContract) {
       const result = await tokenContract.transfer(
         transfer.address,
-        ethers.utils.parseEther(transfer.amount),
+        ethers.utils.parseEther(transfer.amount.toString()),
         {
           gasLimit: 9023256,
         }
@@ -188,12 +195,19 @@ async function withdrawAll(tokenAddress: string) {
             "
           >
             <div
-              class="bg-primary-500 py-4 px-5 flex justify-between items-center space-x-45"
+              class="bg-primary-500 py-4 px-5 flex justify-between items-center space-x-45 z-30"
               :class="isOpen[i] ? 'rounded-t-lg' : 'rounded-lg'"
             >
               <div>
                 <h1 class="text-sm font-bold">{{ token.name }}</h1>
-                <h2 class="text-xl font-light">{{ token.balance }}</h2>
+                <div class="flex items-center space-x-2 mt-1">
+                  <p
+                    class="text-xs bg-white text-primary-600 px-2 py-1 rounded-lg"
+                  >
+                    {{ token.symbol }}
+                  </p>
+                  <h2 class="text-xl font-light">{{ token.balance }}</h2>
+                </div>
               </div>
               <div>
                 <button
@@ -215,11 +229,15 @@ async function withdrawAll(tokenAddress: string) {
             <transition name="fadeonly" mode="out-in">
               <div
                 v-show="isOpen[i]"
-                class="py-4 px-5 bg-primary-700 rounded-b-lg"
+                class="py-4 px-5 bg-primary-700 rounded-b-lg z-20"
               >
                 <div>
                   <h1 class="text-sm font-bold">Address</h1>
                   <h2 class="text-xs">{{ token.address }}</h2>
+                </div>
+                <div class="mt-2">
+                  <h1 class="text-sm font-bold">DEX Balance</h1>
+                  <h2 class="text-xs">{{ token.dexBalance }}</h2>
                 </div>
                 <div class="mt-2 flex justify-between items-center space-x-5">
                   <div>
@@ -283,20 +301,8 @@ async function withdrawAll(tokenAddress: string) {
   </div>
 </template>
 
-<style>
-.fadeonly-enter-active {
-  transition: all 0.5s;
-}
-.fadeonly-leave-active {
-  transition: all 0.3s;
-}
-.fadeonly-enter-from {
-  opacity: 0;
-  transform: translateY(-2em);
-}
-
-.fadeonly-leave-to {
-  transform: translateY(1em);
-  opacity: 0;
+<style scoped>
+input[type="number"] {
+  @apply text-white bg-dark-600 hover:bg-dark-500 px-3 py-2 border border-gray-400 rounded;
 }
 </style>

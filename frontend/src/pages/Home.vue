@@ -21,7 +21,7 @@ onMounted(async () => {
   const filters = await DAOFactoryContract.filters.NewDAO();
   const logs = await DAOFactoryContract.queryFilter(
     filters,
-    26161202,
+    26162202,
     "latest"
   );
   const events = logs.map((log) => DAOFactoryContract.interface.parseLog(log));

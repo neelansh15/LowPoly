@@ -34,7 +34,7 @@ async function createDAO() {
       );
       result.wait(1).then(() => {
         console.log("Done");
-        alert("Created token");
+        alert("Created DAO");
         router.push("/");
       });
     }
