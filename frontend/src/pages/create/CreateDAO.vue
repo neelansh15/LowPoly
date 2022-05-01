@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 
 import PrimaryButton from "~/components/PrimaryButton.vue";
 import SecondaryButton from "../../components/SecondaryButton.vue";
-import { useDAOFactoryContract } from "~/utils/useContract";
+import { useDAOFactoryContract, useTokenContract } from "~/utils/useContract";
 import { storeToRefs } from "pinia";
 import { useWeb3Store } from "../../store/web3Store";
 import { reactive } from "vue";
@@ -12,6 +12,7 @@ const { address, chainId } = storeToRefs(useWeb3Store());
 
 const tokenInfo = reactive({
   address: "",
+  name: "",
 });
 const DAOInfo = reactive({
   name: "",
@@ -23,9 +24,12 @@ async function createDAO() {
   console.log(tokenInfo.address, DAOInfo.name);
   try {
     if (DAOFactoryContract) {
+      const TokenContract = useTokenContract(tokenInfo.address);
+      tokenInfo.name = await TokenContract.name();
       const result = await DAOFactoryContract.createDao(
         DAOInfo.name,
         tokenInfo.address,
+        tokenInfo.name,
       );
       result.wait(1).then(() => {
         console.log("Done");
