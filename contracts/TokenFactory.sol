@@ -33,7 +33,7 @@ contract TokenFactory {
         return _tokens[_address];
     }
 
-    // DEX functions
+    //DEX functions
     function buy(address tokenAddress) public payable {
         Token token = Token(tokenAddress);
         uint256 amount = msg.value;

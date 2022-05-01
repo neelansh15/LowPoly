@@ -78,7 +78,7 @@ onMounted(async () => {
   );
   stateIndex.value = await DAOContract.state(props.proposalId);
   proposal.status = proposalStatus[stateIndex.value];
-
+  console.log(await DAOContract.proposalVotes(props.proposalId));
   const tokenAddress = await DAOContract.token();
   const TokenContract = useTokenContract(tokenAddress);
   let balance = await TokenContract.balanceOf(address.value);
