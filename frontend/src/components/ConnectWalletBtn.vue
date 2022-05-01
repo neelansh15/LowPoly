@@ -22,10 +22,6 @@ const { setAlchemyprovider } = useWeb3Store();
 const init = async () => {
   const provider = window.ethereum;
 
-  const web3Provider = new ethers.providers.Web3Provider(
-    window.ethereum,
-    "any"
-  );
   const permissions = await provider.request({
     method: "wallet_getPermissions",
   });

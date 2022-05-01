@@ -10,11 +10,8 @@ export function useContract(address: string, abi: any, customProvider?: any) {
   const { web3provider } = useWeb3Store();
   const provider =
     web3provider || new ethers.providers.Web3Provider(window.ethereum);
-  const contract = new ethers.Contract(
-    address,
-    abi,
-    customProvider || provider.getSigner()
-  );
+  const contract = new ethers.Contract(address, abi, provider.getSigner());
+  // customProvider || provider.getSigner()
 
   return contract;
 }
@@ -37,7 +34,6 @@ export function useDAOContract(address: string, useAlchemy = false) {
     DAOData.abi,
     useAlchemy ? alchemyProvider : null
   );
-
   return DAOContract;
 }
 
