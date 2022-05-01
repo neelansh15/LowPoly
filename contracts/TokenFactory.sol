@@ -25,5 +25,34 @@ contract TokenFactory {
         return _tokens[msg.sender];
     }
 
+    function getTokensOf(address _address)
+        public
+        view
+        returns (address[] memory)
+    {
+        return _tokens[_address];
+    }
+
+    function mint(
+        address tokenAddress,
+        address to,
+        uint256 amount
+    ) public {
+        Token token = Token(tokenAddress);
+        require(msg.sender == token.getOwner(), "Only token owner can mint");
+        token.mint(to, amount);
+    }
+
+    function transferOwnership(address tokenAddress, address newOwner) public {
+        Token token = Token(tokenAddress);
+        require(msg.sender == token.getOwner(), "Restricted to only token owner");
+        token.transferOwnership(newOwner);
+    }
+
     // DEX functions here (buy)
+    function buy(address tokenAddress, uint256 amount) public {
+        Token token = Token(tokenAddress);
+        require(token.balanceOf(address(this)) > amount, "Requested amount unavailable");
+        token.transfer(msg.sender, amount);
+    }
 }
