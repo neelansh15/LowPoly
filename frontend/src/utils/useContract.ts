@@ -6,10 +6,12 @@ import DAOData from "../../../abis/dao.json";
 import DEXData from "../../../abis/DEX.json";
 import { useWeb3Store } from "~/store/web3Store";
 
-export function useContract(address: string, abi: any) {
+export function useContract(address: string, abi: any, customProvider?: any) {
   const { web3provider } = useWeb3Store();
   const provider =
-    web3provider || new ethers.providers.Web3Provider(window.ethereum);
+    customProvider ||
+    web3provider ||
+    new ethers.providers.Web3Provider(window.ethereum);
   const contract = new ethers.Contract(address, abi, provider.getSigner());
   return contract;
 }
@@ -25,17 +27,22 @@ export function useDAOContract(address: string) {
 }
 
 export function useTokenFactoryContract() {
+  const { alchemyProvider } = useWeb3Store();
   const tokenFactoryContract = useContract(
     tokenFactoryData.address,
-    tokenFactoryData.abi
+    tokenFactoryData.abi,
+    alchemyProvider
   );
   return tokenFactoryContract;
 }
 
 export function useDAOFactoryContract() {
+  const { alchemyProvider } = useWeb3Store();
+
   const DAOFactoryContract = useContract(
     DAOFactoryData.address,
-    DAOFactoryData.abi
+    DAOFactoryData.abi,
+    alchemyProvider
   );
   return DAOFactoryContract;
 }
