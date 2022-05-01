@@ -9,6 +9,8 @@ import { onMounted, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
 import { formatEther } from "@ethersproject/units";
 import { useDAOContract, useTokenContract } from "~/utils/useContract";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const { address, web3provider } = storeToRefs(useWeb3Store());
 
 const proposalInfo = reactive({
@@ -69,6 +71,7 @@ async function createProposal() {
   result.wait(1, () => {
     console.log("Proposal created");
     alert("Proposal created");
+    router.push(`/dao/${DAOaddress}`);
   });
 }
 

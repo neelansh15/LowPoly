@@ -15,7 +15,7 @@ let isOpen = ref([] as any[]);
 onMounted(async () => {
   // getting details
   const tokenFactoryContract = useTokenFactoryContract();
-  let tokenAddresses = await tokenFactoryContract.getTokens();
+  let tokenAddresses = await tokenFactoryContract.getTokensOf(address.value);
   for (let i in tokenAddresses) {
     const tokenContract = useTokenContract(tokenAddresses[i]);
     let tokenName = await tokenContract.name();
