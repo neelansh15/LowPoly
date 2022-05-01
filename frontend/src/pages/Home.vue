@@ -37,9 +37,7 @@ onMounted(async () => {
       obj.name = await DAOContract.name();
       console.log(obj.name);
       await new Promise(r => setTimeout(r, 5000));
-      const DAOtoken = await DAOContract.token();
-      const TokenContract = useTokenContract(DAOtoken);
-      obj.token = await TokenContract.name();
+      obj.token = await DAOContract.tokenName();
       return obj;
     }),
   );

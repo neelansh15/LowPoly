@@ -28,13 +28,13 @@ async function createDAO() {
       tokenInfo.name = await TokenContract.name();
       const result = await DAOFactoryContract.createDao(
         DAOInfo.name,
-        tokenInfo.address,
         tokenInfo.name,
+        tokenInfo.address,
       );
       result.wait(1).then(() => {
         console.log("Done");
         alert("Created token");
-        router.push("/create/dao");
+        router.push("/");
       });
     }
   } catch (e: any) {
