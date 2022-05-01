@@ -6,26 +6,26 @@ import { Token } from "../typechain";
 // import "@nomiclabs/hardhat-web3";
 
 
-describe("DAO", function () {
-  it("Should deploy", async function () {
-    const Token = await ethers.getContractFactory("Token");
+// describe("DAO", function () {
+//   it("Should deploy", async function () {
+//     const Token = await ethers.getContractFactory("Token");
 
-    const name = "TestToken";
-    const symbol = "TT";
+//     const name = "TestToken";
+//     const symbol = "TT";
 
-    const [owner] = await ethers.getSigners();
-    const token = await Token.deploy(name, symbol, 2000, owner.address);
+//     const [owner] = await ethers.getSigners();
+//     const token = await Token.deploy(name, symbol, 2000, owner.address);
 
-    await expect(await token.name()).to.equal(name);
-    await expect(await token.symbol()).to.equal(symbol);
+//     await expect(await token.name()).to.equal(name);
+//     await expect(await token.symbol()).to.equal(symbol);
 
-    const DAO = await ethers.getContractFactory("DAO");
-    const dao1 = await DAO.deploy("neelansh", token.address);
-    const dao2 = await dao1.deployed();
+//     const DAO = await ethers.getContractFactory("DAO");
+//     const dao1 = await DAO.deploy("neelansh", token.address);
+//     const dao2 = await dao1.deployed();
 
-    await dao2.votingDelay();
-  });
-});
+//     await dao2.votingDelay();
+//   });
+// });
 
 describe("Token", async function () {
   it("It should tranfer tokens", async function () {
@@ -64,8 +64,8 @@ describe("Creating and Executing Proposals", async function () {
     const Token = await ethers.getContractFactory("Token");
     const name = "TestToken";
     const symbol = "TT";
-    const [owner] = await ethers.getSigners();
-    const token1 = await Token.deploy(name, symbol, 12, owner.address);
+    const [owner, account1] = await ethers.getSigners();
+    const token1 = await Token.deploy(name, symbol, 1000, owner.address);
     await token1.deployed();
 
     const tokenAddress = token1.address;
@@ -83,8 +83,6 @@ describe("Creating and Executing Proposals", async function () {
       grantAmount,
     ]);
 
-    await token1.connect(owner).delegate(owner.address);
-  
     console.log(
       await DAO1.propose(
         [tokenAddress],
@@ -99,20 +97,20 @@ describe("Creating and Executing Proposals", async function () {
     const Token = await ethers.getContractFactory("Token");
     const name = "TestToken";
     const symbol = "TT";
-    const [owner] = await ethers.getSigners();
+    const [owner, account1] = await ethers.getSigners();
     const token1 = await Token.deploy(name, symbol, 12, owner.address);
     await token1.deployed();
 
     const tokenAddress = token1.address;
     const token2 = await ethers.getContractAt("ERC20", tokenAddress);
-    await token1.connect(owner).delegate(owner.address);
+    
     const DAO = await ethers.getContractFactory("DAO");
     console.log("token address", token2.address);
     const DAO1 = await DAO.deploy("Devs4shah", token2.address);
     await DAO1.deployed();
 
     const OwnerAddress = owner.address;
-    const grantAmount = 0;
+    const grantAmount = 100;
     const transferCalldata = token2.interface.encodeFunctionData("transfer", [
       OwnerAddress,
       grantAmount,
@@ -126,17 +124,66 @@ describe("Creating and Executing Proposals", async function () {
       [transferCalldata],
       "Proposal #1: Give grant to team"
     );
-
-    console.log(pid);
+    console.log("Proposal id", pid);
+    await token1.transfer(account1.address, 100);
+    
+    
+    console.log("Owner tokens",await token1.balanceOf(owner.address));
+    console.log("Account1 tokens",await token1.balanceOf(account1.address));
+    await token1.connect(account1).delegate(account1.address);
+    console.log("account1 votes", await token1.getVotes(account1.address));
+   
     console.log(
       "Cast vote",
       await DAO1.castVote(
         ethers.BigNumber.from(
-          "98593457774504717184743921050855616380931238485694217572299446144397260964041"
+          "59140839572732244541528800328699297753643426744731966667961496830265219228955"
         ),
         0
       )
     ); 
 
+    console.log(
+      "This is my proposal votes",
+      await DAO1.proposalVotes(
+        ethers.BigNumber.from(
+          "59140839572732244541528800328699297753643426744731966667961496830265219228955"
+        )
+      )
+    );
+
+    await DAO1.connect(account1);
+    // console.log(
+    //   "Proposal state",
+    //   await DAO1.state(
+    //     ethers.BigNumber.from(
+    //       "21340126980592625873694296579883979257315173036002618818160889272297796635842"
+    // )));
+
+    console.log(
+      "Cast vote",
+      await DAO1.castVote(
+        ethers.BigNumber.from(
+          "59140839572732244541528800328699297753643426744731966667961496830265219228955"
+        ),
+        1
+      )
+    ); 
+
+    console.log(
+      "This is my proposal votes",
+      await DAO1.proposalVotes(
+        ethers.BigNumber.from(
+          "21340126980592625873694296579883979257315173036002618818160889272297796635842"
+        )
+      )
+    );
+
+
+    // await token1.connect(owner).delegate(account1.address);
+    // console.log("Voting period", await DAO1.votingDelay());
+  
   })
+
+
 })
