@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import HeaderCard from "~/components/HeaderCard.vue";
-import { useRouter } from "vue-router";
 
 import PrimaryButton from "~/components/PrimaryButton.vue";
 import SecondaryButton from "../../components/SecondaryButton.vue";
@@ -8,6 +7,8 @@ import { useDAOFactoryContract, useTokenContract } from "~/utils/useContract";
 import { storeToRefs } from "pinia";
 import { useWeb3Store } from "../../store/web3Store";
 import { reactive } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const { address, chainId } = storeToRefs(useWeb3Store());
 
 const tokenInfo = reactive({
@@ -17,7 +18,6 @@ const tokenInfo = reactive({
 const DAOInfo = reactive({
   name: "",
 });
-const router = useRouter();
 
 async function createDAO() {
   const DAOFactoryContract = useDAOFactoryContract();
