@@ -29,12 +29,4 @@ contract TokenFactory {
     {
         return _tokens[_address];
     }
-
-    // // DEX functions
-    // function buy(address tokenAddress) public payable {
-    //     Token token = Token(tokenAddress);
-    //     uint256 amount = msg.value;
-    //     require(amount > 1, "Minimum amount is 1 wei");
-    //     token.transfer(msg.sender, amount);
-    // }
 }
