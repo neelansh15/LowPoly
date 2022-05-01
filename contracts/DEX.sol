@@ -10,6 +10,10 @@ contract DEX {
 
     function deposit() external payable {}
 
+    function getBalance() external view returns (uint256) {
+        return address(this).balance;
+    }
+
     // DEX functions
     function buy(address tokenAddress) external payable {
         Token token = Token(tokenAddress);
