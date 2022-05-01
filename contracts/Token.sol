@@ -7,13 +7,12 @@ import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 
 contract Token is ERC20, Ownable, ERC20Permit, ERC20Votes {
-    address private _factory;
+
+    address public _factory;
 
     /**
-        Give 20% to Token Factory and 80% to owner.
-        Owner can freely transfer more to the token factory
-
-        Transfer ownership from factory to actual owner
+        Owner can transfer tokens to the token factory for purchase by others.
+        Transfer ownership from factory to actual owner.
      */
     constructor(
         string memory _name,
@@ -21,14 +20,11 @@ contract Token is ERC20, Ownable, ERC20Permit, ERC20Votes {
         uint256 totalSupply,
         address _ownerAddress
     ) ERC20(_name, _symbol) ERC20Permit(_name) {
-        _mint(msg.sender, ((totalSupply * 20) / 100) * 10**decimals());
-        _mint(_ownerAddress, ((totalSupply * 80) / 100) * 10**decimals());
+        _mint(_ownerAddress, totalSupply * 10**decimals());
         _factory = msg.sender;
-
-        transferOwnership(_ownerAddress);
     }
 
-    function factory() public view returns (address) {
+    function factory() external view returns(address) {
         return _factory;
     }
 

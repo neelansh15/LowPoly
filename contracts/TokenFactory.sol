@@ -17,12 +17,9 @@ contract TokenFactory {
     ) public returns (Token) {
         Token token = new Token(name, symbol, totalSupply, msg.sender);
         _tokens[msg.sender].push(address(token));
+        token.transferOwnership(msg.sender);
         emit NewToken(address(token), name, symbol);
         return token;
-    }
-
-    function getTokens() public view returns (address[] memory) {
-        return _tokens[msg.sender];
     }
 
     function getTokensOf(address _address)
@@ -31,17 +28,5 @@ contract TokenFactory {
         returns (address[] memory)
     {
         return _tokens[_address];
-    }
-
-    // DEX functions
-    function buy(address tokenAddress) public payable {
-        Token token = Token(tokenAddress);
-        uint256 amount = msg.value;
-        require(amount > 1, "Minimum amount is 1 wei");
-        require(
-            token.balanceOf(address(this)) > amount,
-            "Requested amount unavailable"
-        );
-        token.transfer(msg.sender, amount);
     }
 }
