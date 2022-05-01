@@ -9,10 +9,12 @@ import { useWeb3Store } from "~/store/web3Store";
 export function useContract(address: string, abi: any, customProvider?: any) {
   const { web3provider } = useWeb3Store();
   const provider =
-    customProvider ||
-    web3provider ||
-    new ethers.providers.Web3Provider(window.ethereum);
-  const contract = new ethers.Contract(address, abi, provider.getSigner());
+    web3provider || new ethers.providers.Web3Provider(window.ethereum);
+  const contract = new ethers.Contract(
+    address,
+    abi,
+    customProvider || provider.getSigner()
+  );
 
   return contract;
 }
