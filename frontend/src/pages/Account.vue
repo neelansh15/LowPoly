@@ -3,6 +3,7 @@ import { onMounted, ref, reactive } from "vue";
 
 import HeaderCard from "~/components/HeaderCard.vue";
 import { useTokenFactoryContract, useTokenContract } from "~/utils/useContract";
+import DEXData from "../../../abis/DEX.json";
 import PrimaryButton from "~/components/PrimaryButton.vue";
 import { storeToRefs } from "pinia";
 import { useWeb3Store } from "../store/web3Store";
@@ -10,8 +11,11 @@ import { formatEther } from "@ethersproject/units";
 import { ethers } from "ethers";
 const { address, chainId, web3provider } = storeToRefs(useWeb3Store());
 
-let tokens = ref([] as any[]);
-let isOpen = ref([] as any[]);
+const tokens = ref([] as any[]);
+const isOpen = ref([] as any[]);
+
+const dexAddress = ref(DEXData.address);
+
 onMounted(async () => {
   // getting details
   const tokenFactoryContract = useTokenFactoryContract();
@@ -63,7 +67,7 @@ async function transferTokens(address: string) {
         ethers.utils.parseEther(transfer.amount),
         {
           gasLimit: 9023256,
-        },
+        }
       );
       result.wait(1, () => {
         alert("Transferred tokens");
@@ -80,8 +84,9 @@ async function transferTokens(address: string) {
     <HeaderCard>
       <h1 class="text-7xl font-bold">Account</h1>
     </HeaderCard>
-    <div>
-      <h1 class="text-3xl ml-2 mt-3 font-bold">Tokens held by you</h1>
+    <div class="p-5">
+      <p>DEX Address: {{ dexAddress }}</p>
+      <h1 class="text-3xl my-3 font-bold">Tokens held by you</h1>
       <div v-for="(token, i) in tokens">
         <div class="ml-3">
           <div class="flex items-center">
