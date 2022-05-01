@@ -24,7 +24,7 @@
     </div>
     <div
       v-else
-      v-if="stateIndex < 2"
+      v-if="stateIndex < 2 && userBalance > 0"
       class="mt-3 flex justify-between items-center"
     >
       <button @click="castVote(0)">Against</button>
@@ -36,13 +36,14 @@
 
 <script setup lang="ts">
 import { onMounted, ref, reactive } from "vue";
-import { useDAOContract } from "~/utils/useContract";
+import { useDAOContract, useTokenContract } from "~/utils/useContract";
 import { storeToRefs } from "pinia";
 import { useWeb3Store } from "../store/web3Store";
+import { formatEther } from "@ethersproject/units";
 const { address } = storeToRefs(useWeb3Store());
-
 const props = defineProps(["proposalId", "daoAddress"]);
-const stateIndex = ref(0);
+let stateIndex = ref(0);
+let userBalance = ref(0);
 let proposalStatus = [
   "Pending",
   "Active",
@@ -76,5 +77,11 @@ onMounted(async () => {
     address.value,
   );
   stateIndex.value = await DAOContract.state(props.proposalId);
+  proposal.status = proposalStatus[stateIndex.value];
+
+  const tokenAddress = await DAOContract.token();
+  const TokenContract = useTokenContract(tokenAddress);
+  let balance = await TokenContract.balanceOf(address.value);
+  userBalance.value = +formatEther(balance.toString());
 });
 </script>
