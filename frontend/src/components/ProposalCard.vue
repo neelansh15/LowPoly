@@ -81,15 +81,11 @@ const castVote = async (val: number) => {
   console.log(result);
   result.wait(1, async () => {
     alert("casted vote");
-    const result2 = await DAOContract.proposalVotes(props.proposalId);
-    console.log(result2);
   });
-  const result2 = await DAOContract.proposalVotes(props.proposalId);
-  console.log(result2);
 };
 
 onMounted(async () => {
-  const DAOContract = useDAOContract(props.daoAddress);
+  const DAOContract = useDAOContract(props.daoAddress, true);
   proposal.hasVoted = await DAOContract.hasVoted(
     props.proposalId,
     address.value,

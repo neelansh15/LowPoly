@@ -33,11 +33,11 @@ const DAO = reactive({
 });
 
 onMounted(async () => {
-  const DAOContract = useDAOContract(DAOaddress);
+  const DAOContract = useDAOContract(DAOaddress, true);
   const name = await DAOContract.name();
   DAO.name = name;
   const tokenAddress = await DAOContract.token();
-  const TokenContract = useTokenContract(tokenAddress);
+  const TokenContract = useTokenContract(tokenAddress, true);
   DAO.threshold = await DAOContract.proposalThreshold();
   let balance = await TokenContract.balanceOf(address.value);
   account.balance = formatEther(balance.toString());

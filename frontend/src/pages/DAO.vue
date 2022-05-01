@@ -42,18 +42,18 @@ onMounted(async () => {
   const route = useRoute();
   const address = route.params.address as string;
   dao.value.address = address;
-  const DAOContract = useDAOContract(address);
+  const DAOContract = useDAOContract(address, true);
   dao.value.name = await DAOContract.name();
   dao.value.tokenAddress = await DAOContract.token();
-  const TokenContract = useTokenContract(dao.value.tokenAddress);
+  const TokenContract = useTokenContract(dao.value.tokenAddress, true);
   dao.value.token = await TokenContract.name();
   dao.value.tokenSymbol = await TokenContract.symbol();
 
   const filters = await DAOContract.filters.ProposalCreated();
   const logs = await DAOContract.queryFilter(filters, 26078840, "latest");
-  const events = logs.map((log) => DAOContract.interface.parseLog(log));
+  const events = logs.map(log => DAOContract.interface.parseLog(log));
   console.log("EVENTS:", events);
-  proposals.value = events.map((e) => {
+  proposals.value = events.map(e => {
     let obj = {
       title: e.args.description.split("$$")[0],
       description: e.args.description.split("$$")[1],

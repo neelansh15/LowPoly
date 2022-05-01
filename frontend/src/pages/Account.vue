@@ -18,10 +18,10 @@ const dexAddress = ref(DEXData.address);
 
 onMounted(async () => {
   // getting details
-  const tokenFactoryContract = useTokenFactoryContract();
+  const tokenFactoryContract = useTokenFactoryContract(true);
   let tokenAddresses = await tokenFactoryContract.getTokensOf(address.value);
   for (let i in tokenAddresses) {
-    const tokenContract = useTokenContract(tokenAddresses[i]);
+    const tokenContract = useTokenContract(tokenAddresses[i], true);
     let tokenName = await tokenContract.name();
     let balance = await tokenContract.balanceOf(address.value);
     balance = formatEther(balance.toString());
