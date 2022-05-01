@@ -3,7 +3,7 @@ import ConnectWalletBtn from "~/components/ConnectWalletBtn.vue";
 </script>
 
 <template>
-  <nav class="p-5 bg-primary-600 text-white flex justify-between">
+  <nav class="p-5 bg-primary-500 text-white flex justify-between">
     <!-- Left -->
     <div>
       <router-link to="/">

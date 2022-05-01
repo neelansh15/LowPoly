@@ -46,6 +46,7 @@ async function connectWallet() {
   const provider = window.ethereum;
 
   const web3Provider = new ethers.providers.Web3Provider(provider, "any");
+  const accounts = await web3Provider.send("eth_requestAccounts", []);
 
   const network = await web3Provider.getNetwork();
   wallet.setWeb3provider(web3Provider);
