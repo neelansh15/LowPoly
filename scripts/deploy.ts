@@ -5,6 +5,7 @@
 // Runtime Environment's members available in the global scope.
 import { ethers } from "hardhat";
 import { writeFileSync } from "fs";
+import { parseEther } from "ethers/lib/utils";
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -14,9 +15,16 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
+  // const [owner] = await ethers.getSigners();
+
   // DEPLOY TOKEN
   const Token = await ethers.getContractFactory("Token");
-  // const token = await Token.deploy("TestToken1", "TT1");
+  // const token = await Token.deploy(
+  //   "TestToken1",
+  //   "TT1",
+  //   parseEther("100000"),
+  //   owner.address
+  // );
 
   // await token.deployed();
 
@@ -30,7 +38,7 @@ async function main() {
 
   // DEPLOY DAO (for testing, actually need only LowPoly contract)
   const DAO = await ethers.getContractFactory("DAO");
-  // const dao = await DAO.deploy("0xf145192Db921b0e2A6699748eD3630b956b6CD19");
+  // const dao = await DAO.deploy("LowPolyDAO", token.address);
 
   // await dao.deployed();
 

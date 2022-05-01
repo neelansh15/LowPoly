@@ -6,8 +6,13 @@ import "./DAO.sol";
 contract DAOFactory {
     // Mapping of owner addresses to their created DAOs
     mapping(address => address[]) public _daos;
+    uint256 public startBlock;
 
     event NewDAO(string name, address _daoAddress, address _tokenAddress);
+
+    constructor(){
+        startBlock = block.number;
+    }
 
     function createDao(string memory name, IVotes tokenAddress)
         public
