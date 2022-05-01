@@ -20,26 +20,47 @@ describe.only("LowPoly DEX", function () {
     );
 
     const amount = "100";
+    const transferAmount = "1000";
 
-    await token.transfer(dex.address, parseEther("1000"));
+    await token.transfer(dex.address, parseEther(transferAmount));
+    const dexTokenBalance = +formatEther(await token.balanceOf(dex.address));
+    console.log("DEX token balance after transfer", dexTokenBalance);
+    expect(dexTokenBalance).to.equal(+transferAmount);
+
+    const thisTokenEtherBalanceBeforeBuy = await dex.tokenEtherBalance(
+      token.address
+    );
+    console.log(
+      "DEX token ether balance before buy",
+      formatEther(thisTokenEtherBalanceBeforeBuy)
+    );
+    expect(+formatEther(thisTokenEtherBalanceBeforeBuy)).to.equal(0);
 
     await dex.buy(token.address, {
       value: parseEther(amount),
     });
 
     const thisTokenEtherBalance = await dex.tokenEtherBalance(token.address);
-    console.log("DEX token ether balance", formatEther(thisTokenEtherBalance));
+    console.log(
+      "DEX token ether balance after buy",
+      formatEther(thisTokenEtherBalance)
+    );
     expect(+formatEther(thisTokenEtherBalance)).to.equal(+amount);
 
     const dexTotalBalance = await dex.getBalance();
     console.log("DEX total balance", +formatEther(dexTotalBalance));
     expect(+formatEther(dexTotalBalance)).to.equal(+amount);
 
+    // Not working somehow
     // let userTokenBalance = +formatEther(await token.balanceOf(owner.address));
     // console.log("user token balance after all this", userTokenBalance);
     // expect(userTokenBalance).to.equal(+totalSupply - 1000 + amount);
 
     // Withdraw
+    console.log(
+      "Owner ether balance before withdraw",
+      +formatEther(await owner.getBalance())
+    );
     await dex.withdrawAll(token.address);
     const thisTokenEtherBalanceAfterWithdraw = await dex.tokenEtherBalance(
       token.address
@@ -49,5 +70,10 @@ describe.only("LowPoly DEX", function () {
       formatEther(thisTokenEtherBalanceAfterWithdraw)
     );
     expect(+formatEther(thisTokenEtherBalanceAfterWithdraw)).to.equal(0);
+
+    console.log(
+      "Owner ether balance after withdraw",
+      +formatEther(await owner.getBalance())
+    );
   });
 });

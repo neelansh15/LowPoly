@@ -50,7 +50,8 @@ contract DEX {
         );
 
         _tokenBalances[tokenAddress] = _tokenBalances[tokenAddress] - amount;
-        msg.sender.call{value: amount};
+        // msg.sender.call{value: amount};
+        payable(msg.sender).transfer(amount);
     }
 
     // Withdraw all token funds to owner of non-profit (token owner)
@@ -63,6 +64,7 @@ contract DEX {
 
         uint256 amount = _tokenBalances[tokenAddress];
         _tokenBalances[tokenAddress] = _tokenBalances[tokenAddress] - amount;
-        msg.sender.call{value: amount};
+        // msg.sender.call{value: amount};
+        payable(msg.sender).transfer(amount);
     }
 }
