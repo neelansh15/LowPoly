@@ -15,16 +15,27 @@
       </p>
     </div>
     <div class="mt-3 flex justify-between items-center">
-      <button>Agree</button>
-      <button>Disagree</button>
-      <button>Abstain</button>
+      <button @click="castVote(0)">Against</button>
+      <button @click="castVote(1)">For</button>
+      <button @click="castVote(2)">Abstain</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
+import { useDAOContract } from "~/utils/useContract";
+
 const props = defineProps(["proposalId", "daoAddress"]);
+
+const castVote = async (val: number) => {
+  const DAOContract = useDAOContract(props.daoAddress);
+  const result = await DAOContract.castVote(props.proposalId, val);
+  result.wait(1, () => {
+    alert("casted vote");
+  });
+};
+
 onMounted(() => {
   console.log(props.proposalId, props.daoAddress);
 });

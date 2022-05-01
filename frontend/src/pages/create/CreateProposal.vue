@@ -5,7 +5,9 @@ import SecondaryButton from "../../components/SecondaryButton.vue";
 import { storeToRefs } from "pinia";
 import { useWeb3Store } from "../../store/web3Store";
 import { ethers } from "ethers";
-import { reactive, watch } from "vue";
+import { onMounted, reactive, watch } from "vue";
+import { useRoute } from "vue-router";
+import { formatEther } from "@ethersproject/units";
 import { useDAOContract, useTokenContract } from "~/utils/useContract";
 const { address, web3provider } = storeToRefs(useWeb3Store());
 
@@ -17,13 +19,32 @@ const proposalInfo = reactive({
   startBlock: "",
   endBlock: "",
 });
+const route = useRoute();
+const DAOaddress = route.params.address;
+
+const account = reactive({
+  balance: "",
+});
+const DAO = reactive({
+  threshold: "",
+  name: "",
+});
+
+onMounted(async () => {
+  const DAOContract = useDAOContract(DAOaddress);
+  const name = await DAOContract.name();
+  DAO.name = name;
+  const tokenAddress = await DAOContract.token();
+  const TokenContract = useTokenContract(tokenAddress);
+  DAO.threshold = await DAOContract.proposalThreshold();
+  let balance = await TokenContract.balanceOf(address.value);
+  account.balance = formatEther(balance.toString());
+});
 
 async function createProposal() {
   const OwnerAddress = address.value;
   const grantAmount = 0;
-  const DAOContract = useDAOContract(
-    "0x3771881e8E58EB2B5F4931a19Eb55464e734e34e",
-  );
+  const DAOContract = useDAOContract(DAOaddress);
   const tokenAddress = await DAOContract.token();
   const TokenContract = useTokenContract(tokenAddress);
   const transferCalldata = TokenContract.interface.encodeFunctionData(
@@ -107,14 +128,14 @@ watch(
 <template>
   <div>
     <HeaderCard>
-      <h1 class="text-7xl font-bold">Create a proposal for DAO</h1>
+      <h1 class="text-7xl font-bold">Create a proposal for {{ DAO.name }}</h1>
     </HeaderCard>
-    <div>
-      <h1>Proposal threshold</h1>
-      <h1>User votes</h1>
+    <div class="mt-3 ml-3">
+      <h1 class="text-xl font-bold">Proposal threshold: {{ DAO.threshold }}</h1>
+      <h1 class="text-xl font-bold">Your balance: {{ account.balance }}</h1>
     </div>
     <div class="p-10">
-      <form @submit.prevent="">
+      <form @submit.prevent="createProposal">
         <b>Fill the details:</b>
         <br />
         <input
@@ -122,6 +143,7 @@ watch(
           type="text"
           v-model="proposalInfo.title"
           placeholder="Title for proposal"
+          required="true"
         />
         <br />
         <input
@@ -129,6 +151,7 @@ watch(
           type="text"
           v-model="proposalInfo.description"
           placeholder="Description for proposal"
+          required="true"
         />
         <br />
         <label class="mr-3" for="startDate">Start date</label>
@@ -138,6 +161,7 @@ watch(
           type="date"
           v-model="proposalInfo.startDate"
           placeholder="Start date dd/mm/yyyy"
+          required="true"
         />
         <label class="ml-3 mr-3" for="endDate">End date</label>
         <input
@@ -146,6 +170,7 @@ watch(
           type="date"
           v-model="proposalInfo.endDate"
           placeholder="End date dd/mm/yyyy"
+          required="true"
         />
         <br />
         <input
@@ -162,9 +187,7 @@ watch(
         />
 
         <div class="mt-3 space-x-2">
-          <PrimaryButton type="button" @click="createProposal">
-            Create proposal
-          </PrimaryButton>
+          <PrimaryButton type="submit"> Create proposal </PrimaryButton>
           <SecondaryButton type="reset">Reset</SecondaryButton>
         </div>
       </form>
