@@ -34,6 +34,9 @@ onMounted(async () => {
   }
 });
 
+const token = reactive({
+  address: "",
+});
 const delegate = reactive({
   address: "",
 });
@@ -67,7 +70,7 @@ async function transferTokens(address: string) {
         ethers.utils.parseEther(transfer.amount),
         {
           gasLimit: 9023256,
-        }
+        },
       );
       result.wait(1, () => {
         alert("Transferred tokens");
@@ -86,6 +89,59 @@ async function transferTokens(address: string) {
     </HeaderCard>
     <div class="p-5">
       <p>DEX Address: {{ dexAddress }}</p>
+      <div class="p-10">
+        <b>Transfer tokens</b>
+        <form action="transferTokens">
+          <input
+            type="text"
+            v-model="token.address"
+            placeholder="Token address"
+          />
+          <input
+            class="ml-3"
+            type="text"
+            v-model="transfer.address"
+            placeholder="Recipient address"
+          />
+          <input
+            class="ml-3"
+            type="text"
+            v-model="transfer.amount"
+            placeholder="Amount"
+          />
+          <PrimaryButton
+            class="ml-3"
+            type="button"
+            @click="transferTokens(token.address)"
+          >
+            Transfer tokens
+          </PrimaryButton>
+        </form>
+      </div>
+      <div class="p-10">
+        <b>Delegate tokens</b>
+        <form action="delegateToken">
+          <input
+            type="text"
+            v-model="token.address"
+            placeholder="Token address"
+          />
+          <input
+            type="text"
+            class="ml-3"
+            v-model="delegate.address"
+            placeholder="Recipient address"
+          />
+
+          <PrimaryButton
+            class="ml-3"
+            type="button"
+            @click="delegateVotes(token.address)"
+          >
+            Delegate
+          </PrimaryButton>
+        </form>
+      </div>
       <h1 class="text-3xl my-3 font-bold">Tokens held by you</h1>
       <div v-for="(token, i) in tokens">
         <div class="ml-3">
