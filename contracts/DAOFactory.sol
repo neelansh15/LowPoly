@@ -10,15 +10,16 @@ contract DAOFactory {
 
     event NewDAO(string name, address _daoAddress, address _tokenAddress);
 
-    constructor(){
+    constructor() {
         startBlock = block.number;
     }
 
-    function createDao(string memory name, IVotes tokenAddress)
-        public
-        returns (DAO)
-    {
-        DAO dao = new DAO(name, tokenAddress);
+    function createDao(
+        string memory name,
+        string memory tokenName,
+        IVotes tokenAddress
+    ) public returns (DAO) {
+        DAO dao = new DAO(name, tokenName, tokenAddress);
         _daos[msg.sender].push(address(dao));
         emit NewDAO(name, address(dao), address(tokenAddress));
         return dao;
