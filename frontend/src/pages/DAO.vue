@@ -17,6 +17,7 @@ let dao = ref({
   tokenAddress: "",
   tokenSymbol: "",
 });
+
 const proposals = ref([] as any[]);
 onMounted(async () => {
   // getting details
@@ -38,6 +39,7 @@ onMounted(async () => {
     let obj = {
       title: e.args.description.split("$$")[0],
       description: e.args.description.split("$$")[1],
+      proposalId: e.args.proposalId,
     };
     return obj;
   });
@@ -78,7 +80,7 @@ onMounted(async () => {
       <ProposalCard
         v-for="proposal in proposals"
         :key="proposal.title"
-        :proposalId="proposal.title"
+        :proposalId="proposal.proposalId"
         :dao-address="dao.address"
         class="ml-3"
       >

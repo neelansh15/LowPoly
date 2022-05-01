@@ -52,11 +52,14 @@ async function createProposal() {
     [OwnerAddress, grantAmount],
   );
   console.log("CREATE PROPOSAL");
+  let proposalDescription =
+    proposalInfo.title + "$$" + proposalInfo.description;
+  console.log(proposalDescription);
   const result = await DAOContract.propose(
     [tokenAddress],
     [0],
     [transferCalldata],
-    proposalInfo.title,
+    proposalDescription,
     {
       gasLimit: 9027672,
     },
@@ -64,6 +67,7 @@ async function createProposal() {
 
   console.log("RESULT:", result);
   result.wait(1, () => {
+    console.log("Proposal created");
     alert("Proposal created");
   });
 }
@@ -154,7 +158,7 @@ watch(
           required="true"
         />
         <br />
-        <label class="mr-3" for="startDate">Start date</label>
+        <!-- <label class="mr-3" for="startDate">Start date</label>
         <input
           class="mt-3 space-x-2"
           id="startDate"
@@ -184,7 +188,7 @@ watch(
           type="text"
           v-model="proposalInfo.endBlock"
           placeholder="End block"
-        />
+        /> -->
 
         <div class="mt-3 space-x-2">
           <PrimaryButton type="submit"> Create proposal </PrimaryButton>
