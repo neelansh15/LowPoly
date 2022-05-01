@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, reactive } from "vue";
+import { useRouter } from "vue-router";
 import HeaderCard from "~/components/HeaderCard.vue";
 import PrimaryButton from "~/components/PrimaryButton.vue";
 import SecondaryButton from "../../components/SecondaryButton.vue";
@@ -14,6 +15,8 @@ const tokenInfo = reactive({
   totalSupply: "",
 });
 
+const router = useRouter();
+
 async function createToken() {
   const tokenFactoryContract = useTokenFactoryContract();
   try {
@@ -24,6 +27,8 @@ async function createToken() {
         tokenInfo.totalSupply,
       );
       result.wait(1).then(() => {
+        alert("Created token");
+        router.push("/create/dao");
         console.log("Done");
       });
     }
@@ -60,9 +65,9 @@ async function createToken() {
           placeholder="Supply amount"
         />
         <div class="mt-4 ml-3 space-x-2">
-          <PrimaryButton type="button" @click="createToken"
-            >Create Token</PrimaryButton
-          >
+          <PrimaryButton type="button" @click="createToken">
+            Create Token
+          </PrimaryButton>
           <SecondaryButton type="reset">Reset</SecondaryButton>
           <p class="mt-3 text-gray-500">
             Already have a token?
