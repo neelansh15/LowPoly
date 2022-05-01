@@ -19,6 +19,17 @@
         <slot name="endDate"></slot>
       </p>
     </div>
+
+    <div class="mt-3 flex justify-between items-center">
+      <h1>Against</h1>
+      <h1>For</h1>
+      <h1>Abstain</h1>
+    </div>
+    <div class="mt-3 flex justify-between items-center">
+      <h1>{{ proposal.against }}</h1>
+      <h1>{{ proposal.for }}</h1>
+      <h1>{{ proposal.abstained }}</h1>
+    </div>
     <div v-if="proposal.hasVoted" class="mt-3 text-center">
       <h1>Already Voted</h1>
     </div>
@@ -30,16 +41,6 @@
       <button @click="castVote(0)">Against</button>
       <button @click="castVote(1)">For</button>
       <button @click="castVote(2)">Abstain</button>
-    </div>
-    <div class="mt-3 flex justify-between items-center">
-      <h1>Against</h1>
-      <h1>For</h1>
-      <h1>Abstain</h1>
-    </div>
-    <div class="mt-3 flex justify-between items-center">
-      <h1>{{ proposal.against }}</h1>
-      <h1>{{ proposal.for }}</h1>
-      <h1>{{ proposal.abstained }}</h1>
     </div>
   </div>
 </template>
@@ -104,7 +105,7 @@ onMounted(async () => {
   console.log(result);
   proposal.for = +formatEther(result.forVotes._hex);
   proposal.against = +formatEther(result.againstVotes._hex);
-  proposal.abstained = +formatEther(result.abstainedVotes._hex);
+  proposal.abstained = +formatEther(result.abstainVotes._hex);
   await new Promise(r => setTimeout(r, 500));
 });
 </script>
