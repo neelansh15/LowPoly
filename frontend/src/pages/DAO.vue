@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 import { storeToRefs } from "pinia";
 import { useWeb3Store } from "../store/web3Store";
 const { web3provider } = storeToRefs(useWeb3Store());
-
+let quantity = ref("");
 let dao = ref({
   name: "",
   address: "",
@@ -17,6 +17,17 @@ let dao = ref({
   tokenAddress: "",
   tokenSymbol: "",
 });
+
+const buyTokens = () => {
+  const num = Number(quantity.value);
+
+  if (Number.isInteger(num) && num > 0) {
+    console.log("TRUE");
+  } else {
+    console.log("False");
+  }
+  console.log("buyTokens");
+};
 
 const proposals = ref([] as any[]);
 onMounted(async () => {
@@ -54,7 +65,7 @@ onMounted(async () => {
         <h1 class="font-bold text-7xl">{{ dao.name }}</h1>
         <p class="mt-2 text-gray-100">{{ dao.address }}</p>
       </div>
-      <div>
+      <div class="bg-teal-700 p-5">
         <div class="flex">
           <p class="text-3xl">
             {{ dao.token }}
@@ -66,6 +77,15 @@ onMounted(async () => {
         <p>
           {{ dao.tokenAddress }}
         </p>
+        <div class="flex items-center">
+          <input
+            type="text"
+            class="max-h-6 text-black"
+            v-model="quantity"
+            placeholder="Quantity of tokens to buy"
+          />
+          <button class="ml-2 px-2" @click="buyTokens">Buy</button>
+        </div>
       </div>
     </HeaderCard>
     <div class="mx-5 flex justify-between items-center">
@@ -76,7 +96,9 @@ onMounted(async () => {
         </router-link>
       </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div
+      class="w-screen grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+    >
       <ProposalCard
         v-for="proposal in proposals"
         :key="proposal.title"

@@ -60,14 +60,14 @@ onMounted(async () => {
         <PrimaryButton> Account </PrimaryButton>
       </router-link>
     </div>
-    <div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <router-link
         v-for="dao in daos"
         :key="dao.name"
-        class="ml-3"
+        class="mx-3"
         :to="'/dao/' + dao.address"
       >
-        <DAOCard>
+        <DAOCard class="mt-3">
           <template v-slot:name> {{ dao.name }} </template>
           <template v-slot:token> {{ dao.token }} </template>
         </DAOCard>
