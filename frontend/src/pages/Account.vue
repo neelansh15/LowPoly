@@ -176,50 +176,64 @@ async function withdrawAll(tokenAddress: string) {
         </form>
       </div>
       <h1 class="text-3xl my-3 font-bold">Tokens owned by you</h1>
-      <div v-for="(token, i) in tokens">
-        <div class="bg-primary-500 rounded-lg" style="width: fit-content">
-          <div class="py-4 px-5 flex justify-between items-center space-x-45">
-            <div>
-              <h1 class="text-sm font-bold">{{ token.name }}</h1>
-              <h2 class="text-xl font-light">{{ token.balance }}</h2>
-            </div>
-            <div>
-              <button
-                v-if="isOpen[i]"
-                class="p-3 text-xl"
-                @click="isOpen[i] = !isOpen[i]"
-              >
-                &uarr;
-              </button>
-              <button
-                v-if="!isOpen[i]"
-                class="p-3 text-xl"
-                @click="isOpen[i] = !isOpen[i]"
-              >
-                &darr;
-              </button>
-            </div>
-          </div>
-          <transition name="fadeonly" mode="in-out">
+      <div class="flex flex-wrap space-x-5">
+        <div v-for="(token, i) in tokens">
+          <div
+            class="my-2"
+            style="
+              width: fit-content;
+              transition: all 0.66s ease-out;
+              overflow: hidden;
+              min-height: 226px;
+            "
+          >
             <div
-              v-if="isOpen[i]"
-              class="mt-2 py-4 px-5 bg-primary-700 rounded-b-lg"
+              class="bg-primary-500 py-4 px-5 flex justify-between items-center space-x-45"
+              :class="isOpen[i] ? 'rounded-t-lg' : 'rounded-lg'"
             >
               <div>
-                <h1 class="text-sm font-bold">Address</h1>
-                <h2 class="text-xs">{{ token.address }}</h2>
+                <h1 class="text-sm font-bold">{{ token.name }}</h1>
+                <h2 class="text-xl font-light">{{ token.balance }}</h2>
               </div>
-              <div class="mt-2 flex justify-between items-center space-x-5">
-                <div>
-                  <h1 class="text-sm font-bold">Claimable Ether</h1>
-                  <h2 class="text-xl font-light">{{ token.claimableEther }}</h2>
-                </div>
-                <PrimaryButton @click="withdrawAll(token.address)"
-                  >Withdraw all</PrimaryButton
+              <div>
+                <button
+                  v-show="isOpen[i]"
+                  class="p-3 text-xl"
+                  @click="isOpen[i] = !isOpen[i]"
                 >
+                  &uarr;
+                </button>
+                <button
+                  v-show="!isOpen[i]"
+                  class="p-3 text-xl"
+                  @click="isOpen[i] = !isOpen[i]"
+                >
+                  &darr;
+                </button>
               </div>
+            </div>
+            <transition name="fadeonly" mode="out-in">
+              <div
+                v-show="isOpen[i]"
+                class="py-4 px-5 bg-primary-700 rounded-b-lg"
+              >
+                <div>
+                  <h1 class="text-sm font-bold">Address</h1>
+                  <h2 class="text-xs">{{ token.address }}</h2>
+                </div>
+                <div class="mt-2 flex justify-between items-center space-x-5">
+                  <div>
+                    <h1 class="text-sm font-bold">Claimable Ether</h1>
+                    <h2 class="text-xl font-light">
+                      {{ token.claimableEther }}
+                    </h2>
+                  </div>
+                  <PrimaryButton @click="withdrawAll(token.address)"
+                    >Withdraw all</PrimaryButton
+                  >
+                </div>
 
-              <!-- <div class="p-10">
+                <!-- <div class="p-10">
                 <b>Transfer tokens</b>
                 <form action="transferTokens">
                   <input
@@ -260,8 +274,9 @@ async function withdrawAll(tokenAddress: string) {
                   </PrimaryButton>
                 </form>
               </div> -->
-            </div>
-          </transition>
+              </div>
+            </transition>
+          </div>
         </div>
       </div>
     </div>
@@ -269,7 +284,9 @@ async function withdrawAll(tokenAddress: string) {
 </template>
 
 <style>
-.fadeonly-enter-active,
+.fadeonly-enter-active {
+  transition: all 0.5s;
+}
 .fadeonly-leave-active {
   transition: all 0.3s;
 }
@@ -279,7 +296,7 @@ async function withdrawAll(tokenAddress: string) {
 }
 
 .fadeonly-leave-to {
+  transform: translateY(1em);
   opacity: 0;
-  transform: translateY(2em);
 }
 </style>
