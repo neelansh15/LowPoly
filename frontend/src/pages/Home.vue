@@ -47,8 +47,8 @@ onMounted(async () => {
       <router-link to="/create/dao">
         <PrimaryButton> Create a DAO </PrimaryButton>
       </router-link>
-      <router-link class="ml-3" to="/dao/manage">
-        <PrimaryButton> Manage a DAO </PrimaryButton>
+      <router-link class="ml-3" to="/account">
+        <PrimaryButton> Account </PrimaryButton>
       </router-link>
     </div>
     <div>

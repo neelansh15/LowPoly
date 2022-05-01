@@ -15,6 +15,7 @@ let dao = ref({
 });
 const proposals = ref([] as any[]);
 onMounted(async () => {
+  // getting details
   const route = useRoute();
   const address = route.params.address;
   dao.value.address = address;
@@ -25,12 +26,12 @@ onMounted(async () => {
   dao.value.token = await TokenContract.name();
   dao.value.tokenSymbol = await TokenContract.symbol();
 
-  const filters = await DAOContract.filters.ProposalCreated();
-  console.log("FILTERS", filters);
-  const logs = await DAOContract.queryFilter(filters, 0, "latest");
-  console.log("LOGS", logs);
-  const events = logs.map(log => DAOContract.interface.parseLog(log));
-  console.log("EVENTS:", events);
+  // const filters = await DAOContract.filters.ProposalCreated();
+  // console.log("FILTERS", filters);
+  // const logs = await DAOContract.queryFilter(filters, 0, "latest");
+  // console.log("LOGS", logs);
+  // const events = logs.map(log => DAOContract.interface.parseLog(log));
+  // console.log("EVENTS:", events);
 
   proposals.value = [
     {
@@ -97,12 +98,12 @@ onMounted(async () => {
     <div class="mx-5 flex justify-between items-center">
       <h1 class="text-xl font-bold">Proposals</h1>
       <div class="mt-5 ml-3">
-        <router-link to="/create/proposal">
+        <router-link :to="'/create/proposal/' + dao.address">
           <PrimaryButton> Create a proposal </PrimaryButton>
         </router-link>
       </div>
     </div>
-    <div class="grid-cols-2">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <ProposalCard
         v-for="proposal in proposals"
         :key="proposal.title"
