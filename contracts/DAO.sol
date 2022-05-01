@@ -22,6 +22,10 @@ contract DAO is
     GovernorVotes,
     GovernorVotesQuorumFraction
 {
+
+    // Block at which this DAO was created
+    uint256 public startBlock;
+
     constructor(string memory name, IVotes token)
         Governor(name)
         GovernorSettings(
@@ -31,7 +35,9 @@ contract DAO is
         )
         GovernorVotes(token)
         GovernorVotesQuorumFraction(4)
-    {}
+    {
+        startBlock = block.number;
+    }
 
     // The following functions are overrides required by Solidity.
 
