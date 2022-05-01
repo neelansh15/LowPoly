@@ -13,6 +13,7 @@ export function useContract(address: string, abi: any, customProvider?: any) {
     web3provider ||
     new ethers.providers.Web3Provider(window.ethereum);
   const contract = new ethers.Contract(address, abi, provider.getSigner());
+
   return contract;
 }
 
@@ -22,7 +23,7 @@ export function useTokenContract(address: string, useAlchemy = false) {
   const tokenContract = useContract(
     address,
     tokenData.abi,
-    useAlchemy ? alchemyProvider : null,
+    useAlchemy ? alchemyProvider : null
   );
   return tokenContract;
 }
@@ -32,8 +33,9 @@ export function useDAOContract(address: string, useAlchemy = false) {
   const DAOContract = useContract(
     address,
     DAOData.abi,
-    useAlchemy ? alchemyProvider : null,
+    useAlchemy ? alchemyProvider : null
   );
+
   return DAOContract;
 }
 
@@ -42,7 +44,7 @@ export function useTokenFactoryContract(useAlchemy = false) {
   const tokenFactoryContract = useContract(
     tokenFactoryData.address,
     tokenFactoryData.abi,
-    useAlchemy ? alchemyProvider : null,
+    useAlchemy ? alchemyProvider : null
   );
   return tokenFactoryContract;
 }
@@ -53,7 +55,7 @@ export function useDAOFactoryContract(useAlchemy = false) {
   const DAOFactoryContract = useContract(
     DAOFactoryData.address,
     DAOFactoryData.abi,
-    useAlchemy ? alchemyProvider : null,
+    useAlchemy ? alchemyProvider : null
   );
   return DAOFactoryContract;
 }

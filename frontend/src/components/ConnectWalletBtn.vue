@@ -18,6 +18,7 @@ const walletConnected = ref(false);
 // const chainId = ref(0);
 
 const { address, chainId, web3provider } = storeToRefs(useWeb3Store());
+const { setAlchemyprovider } = useWeb3Store();
 const init = async () => {
   const provider = window.ethereum;
 
@@ -34,6 +35,12 @@ const init = async () => {
   ) {
     connectWallet();
   }
+
+  const alchemyProvider = new ethers.providers.AlchemyProvider(
+    "maticmum",
+    "fWVG_3ipWJMJsAe6kQm3Hx9HsAUBHJxN"
+  );
+  setAlchemyprovider(alchemyProvider);
 };
 onMounted(init);
 
@@ -41,12 +48,6 @@ async function connectWallet() {
   const wallet = useWeb3Store();
 
   const provider = window.ethereum;
-  const alchemyProvider = new ethers.providers.AlchemyProvider(
-    "maticmum",
-    "fWVG_3ipWJMJsAe6kQm3Hx9HsAUBHJxN"
-  );
-
-  
 
   const web3Provider = new ethers.providers.Web3Provider(provider, "any");
 
