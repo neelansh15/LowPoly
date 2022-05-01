@@ -1,0 +1,60 @@
+{
+  "address": "0x6eb2188DB84D750F06B25576cBc8d27D61d80E28",
+  "abi": [
+    {
+      "type": "function",
+      "name": "buy",
+      "constant": false,
+      "stateMutability": "payable",
+      "payable": true,
+      "inputs": [{ "type": "address", "name": "tokenAddress" }],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "deposit",
+      "constant": false,
+      "stateMutability": "payable",
+      "payable": true,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "getBalance",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [{ "type": "uint256" }]
+    },
+    {
+      "type": "function",
+      "name": "tokenEtherBalance",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [{ "type": "address", "name": "tokenAddress" }],
+      "outputs": [{ "type": "uint256" }]
+    },
+    {
+      "type": "function",
+      "name": "withdraw",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        { "type": "address", "name": "tokenAddress" },
+        { "type": "uint256", "name": "amount" }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "withdrawAll",
+      "constant": false,
+      "payable": false,
+      "inputs": [{ "type": "address", "name": "tokenAddress" }],
+      "outputs": []
+    }
+  ]
+}
