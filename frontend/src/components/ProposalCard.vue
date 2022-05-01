@@ -1,5 +1,5 @@
 <template>
-  <div class="m-5 p-2 bg-primary-600 text-white h-55 min-w-30 w-sm">
+  <div class="m-5 p-2 bg-primary-600 text-white h-60 min-w-30 w-sm">
     <div class="text-right mt-0">
       <h1>
         {{ proposal.status }}
@@ -20,12 +20,12 @@
       </p>
     </div>
 
-    <div class="mt-3 flex justify-between items-center">
+    <div class="mt-3 mx-5 flex justify-between items-center">
       <h1>Against</h1>
       <h1>For</h1>
       <h1>Abstain</h1>
     </div>
-    <div class="mt-3 flex justify-between items-center">
+    <div class="mt-3 mx-10 flex justify-between items-center">
       <h1>{{ proposal.against }}</h1>
       <h1>{{ proposal.for }}</h1>
       <h1>{{ proposal.abstained }}</h1>
@@ -36,11 +36,11 @@
     <div
       v-else
       v-if="stateIndex < 2 && userBalance > 0"
-      class="mt-3 flex justify-between items-center"
+      class="mt-3 mx-4 flex justify-between items-center"
     >
-      <button @click="castVote(0)">Against</button>
-      <button @click="castVote(1)">For</button>
-      <button @click="castVote(2)">Abstain</button>
+      <SecondaryButton @click="castVote(0)">Against</SecondaryButton>
+      <SecondaryButton @click="castVote(1)">For</SecondaryButton>
+      <SecondaryButton @click="castVote(2)">Abstain</SecondaryButton>
     </div>
   </div>
 </template>
@@ -51,6 +51,8 @@ import { useDAOContract, useTokenContract } from "~/utils/useContract";
 import { storeToRefs } from "pinia";
 import { useWeb3Store } from "../store/web3Store";
 import { formatEther } from "@ethersproject/units";
+import SecondaryButton from "./SecondaryButton.vue";
+import PrimaryButton from "./PrimaryButton.vue";
 const { address } = storeToRefs(useWeb3Store());
 const props = defineProps(["proposalId", "daoAddress"]);
 let stateIndex = ref(0);
