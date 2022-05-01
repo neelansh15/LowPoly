@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { ethers } from "hardhat";
 
-describe.only("LowPoly DEX", function () {
+describe("LowPoly DEX", function () {
   it("Should give tokens to DEX, buy and withdraw", async function () {
     const dexFactory = await ethers.getContractFactory("DEX");
     const dex = await dexFactory.deploy();
