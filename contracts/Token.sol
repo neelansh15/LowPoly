@@ -8,14 +8,12 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 
 contract Token is ERC20, Ownable, ERC20Permit, ERC20Votes {
     address private _factory;
-    address private _owner;
 
     /**
-        Maintain two owners: _factory owner who owns this contract and _owner
-        who is the user that created this from the factory
-
         Give 20% to Token Factory and 80% to owner.
         Owner can freely transfer more to the token factory
+
+        Transfer ownership from factory to actual owner
      */
     constructor(
         string memory _name,
@@ -23,14 +21,15 @@ contract Token is ERC20, Ownable, ERC20Permit, ERC20Votes {
         uint256 totalSupply,
         address _ownerAddress
     ) ERC20(_name, _symbol) ERC20Permit(_name) {
-        _mint(msg.sender, totalSupply * 20 / 100 * 10**decimals());
-        _mint(_ownerAddress, totalSupply * 80 / 100 * 10**decimals());
+        _mint(msg.sender, ((totalSupply * 20) / 100) * 10**decimals());
+        _mint(_ownerAddress, ((totalSupply * 80) / 100) * 10**decimals());
         _factory = msg.sender;
-        _owner = _ownerAddress;
+
+        transferOwnership(_ownerAddress);
     }
 
-    function getOwner() public view returns (address) {
-        return _owner;
+    function factory() public view returns (address) {
+        return _factory;
     }
 
     function mint(address to, uint256 amount) public onlyOwner {

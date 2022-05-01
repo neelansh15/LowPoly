@@ -33,26 +33,15 @@ contract TokenFactory {
         return _tokens[_address];
     }
 
-    function mint(
-        address tokenAddress,
-        address to,
-        uint256 amount
-    ) public {
-        Token token = Token(tokenAddress);
-        require(msg.sender == token.getOwner(), "Only token owner can mint");
-        token.mint(to, amount);
-    }
-
-    function transferOwnership(address tokenAddress, address newOwner) public {
-        Token token = Token(tokenAddress);
-        require(msg.sender == token.getOwner(), "Restricted to only token owner");
-        token.transferOwnership(newOwner);
-    }
-
     // DEX functions here (buy)
-    function buy(address tokenAddress, uint256 amount) public {
+    function buy(address tokenAddress) public payable {
         Token token = Token(tokenAddress);
-        require(token.balanceOf(address(this)) > amount, "Requested amount unavailable");
+        uint256 amount = msg.value;
+        require(amount > 1, "Minimum amount is 1 wei");
+        require(
+            token.balanceOf(address(this)) > amount,
+            "Requested amount unavailable"
+        );
         token.transfer(msg.sender, amount);
     }
 }
