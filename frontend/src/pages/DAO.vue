@@ -5,6 +5,10 @@ import HeaderCard from "~/components/HeaderCard.vue";
 import { useDAOContract, useTokenContract } from "~/utils/useContract";
 import PrimaryButton from "~/components/PrimaryButton.vue";
 import ProposalCard from "~/components/ProposalCard.vue";
+import { ethers } from "ethers";
+import { storeToRefs } from "pinia";
+import { useWeb3Store } from "../store/web3Store";
+const { web3provider } = storeToRefs(useWeb3Store());
 
 let dao = ref({
   name: "",
@@ -26,51 +30,18 @@ onMounted(async () => {
   dao.value.token = await TokenContract.name();
   dao.value.tokenSymbol = await TokenContract.symbol();
 
-  // const filters = await DAOContract.filters.ProposalCreated();
-  // console.log("FILTERS", filters);
-  // const logs = await DAOContract.queryFilter(filters, 0, "latest");
-  // console.log("LOGS", logs);
-  // const events = logs.map(log => DAOContract.interface.parseLog(log));
-  // console.log("EVENTS:", events);
-
-  proposals.value = [
-    {
-      title: "Proposal title",
-      description: "test proposal description",
-      startDate: "02/02/2022",
-      endDate: "15/02/2022",
-    },
-    {
-      title: "Proposal title",
-      description: "test proposal description",
-      startDate: "02/02/2022",
-      endDate: "15/02/2022",
-    },
-    {
-      title: "Proposal title",
-      description: "test proposal description",
-      startDate: "02/02/2022",
-      endDate: "15/02/2022",
-    },
-    {
-      title: "Proposal title",
-      description: "test proposal description",
-      startDate: "02/02/2022",
-      endDate: "15/02/2022",
-    },
-    {
-      title: "Proposal title",
-      description: "test proposal description",
-      startDate: "02/02/2022",
-      endDate: "15/02/2022",
-    },
-    {
-      title: "Proposal title",
-      description: "test proposal description",
-      startDate: "02/02/2022",
-      endDate: "15/02/2022",
-    },
-  ];
+  const filters = await DAOContract.filters.ProposalCreated();
+  const logs = await DAOContract.queryFilter(filters, 26078840, "latest");
+  const events = logs.map(log => DAOContract.interface.parseLog(log));
+  console.log("EVENTS:", events);
+  proposals.value = events.map(e => {
+    let obj = {
+      title: e.args.description.split("$$")[0],
+      description: e.args.description.split("$$")[1],
+    };
+    return obj;
+  });
+  console.log(proposals.value);
 });
 </script>
 
