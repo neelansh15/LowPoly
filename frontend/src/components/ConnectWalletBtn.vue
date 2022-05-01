@@ -23,7 +23,7 @@ const init = async () => {
 
   const web3Provider = new ethers.providers.Web3Provider(
     window.ethereum,
-    "any",
+    "any"
   );
   const permissions = await provider.request({
     method: "wallet_getPermissions",
@@ -41,11 +41,14 @@ async function connectWallet() {
   const wallet = useWeb3Store();
 
   const provider = window.ethereum;
-
-  const web3Provider = new ethers.providers.Web3Provider(
-    window.ethereum,
-    "any",
+  const alchemyProvider = new ethers.providers.AlchemyProvider(
+    "maticmum",
+    "fWVG_3ipWJMJsAe6kQm3Hx9HsAUBHJxN"
   );
+
+  
+
+  const web3Provider = new ethers.providers.Web3Provider(provider, "any");
 
   const accounts = await web3Provider.send("eth_requestAccounts", []);
 

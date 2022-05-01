@@ -7,6 +7,7 @@ export const useWeb3Store = defineStore("web3", {
       chainId: null as number | null,
       address: null as string | null,
       web3provider: null as ethers.providers.Web3Provider | null,
+      alchemyProvider: null as ethers.providers.AlchemyProvider | null,
     };
   },
 
@@ -14,7 +15,7 @@ export const useWeb3Store = defineStore("web3", {
     updateWeb3Wallet(
       chainId: number | null,
       address: string | null,
-      web3provider: ethers.providers.Web3Provider | null,
+      web3provider: ethers.providers.Web3Provider | null
     ) {
       this.chainId = chainId;
       this.address = address;
@@ -28,6 +29,9 @@ export const useWeb3Store = defineStore("web3", {
     },
     setWeb3provider(provider: ethers.providers.Web3Provider | null) {
       this.web3provider = provider;
+    },
+    setAlchemyprovider(provider: ethers.providers.AlchemyProvider | null) {
+      this.alchemyProvider = provider;
     },
   },
 });
