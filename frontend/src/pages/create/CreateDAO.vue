@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import HeaderCard from "~/components/HeaderCard.vue";
+import { useRouter } from "vue-router";
+
 import PrimaryButton from "~/components/PrimaryButton.vue";
 import SecondaryButton from "../../components/SecondaryButton.vue";
 import { useDAOFactoryContract } from "~/utils/useContract";
@@ -14,6 +16,7 @@ const tokenInfo = reactive({
 const DAOInfo = reactive({
   name: "",
 });
+const router = useRouter();
 
 async function createDAO() {
   const DAOFactoryContract = useDAOFactoryContract();
@@ -26,7 +29,8 @@ async function createDAO() {
       );
       result.wait(1).then(() => {
         console.log("Done");
-        console.log(DAOFactoryContract.getDAOs());
+        alert("Created token");
+        router.push("/create/dao");
       });
     }
   } catch (e: any) {
