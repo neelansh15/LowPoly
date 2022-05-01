@@ -6,7 +6,8 @@ import { storeToRefs } from "pinia";
 import { useWeb3Store } from "../../store/web3Store";
 import { ethers } from "ethers";
 import { reactive, watch } from "vue";
-const { web3provider } = storeToRefs(useWeb3Store());
+import { useDAOContract, useTokenContract } from "~/utils/useContract";
+const { address, web3provider } = storeToRefs(useWeb3Store());
 
 const proposalInfo = reactive({
   title: "",
@@ -18,7 +19,32 @@ const proposalInfo = reactive({
 });
 
 async function createProposal() {
-  console.log(proposalInfo.title, proposalInfo.description);
+  const OwnerAddress = address.value;
+  const grantAmount = 0;
+  const DAOContract = useDAOContract(
+    "0x3771881e8E58EB2B5F4931a19Eb55464e734e34e",
+  );
+  const tokenAddress = await DAOContract.token();
+  const TokenContract = useTokenContract(tokenAddress);
+  const transferCalldata = TokenContract.interface.encodeFunctionData(
+    "transfer",
+    [OwnerAddress, grantAmount],
+  );
+  console.log("CREATE PROPOSAL");
+  const result = await DAOContract.propose(
+    [tokenAddress],
+    [0],
+    [transferCalldata],
+    proposalInfo.title,
+    {
+      gasLimit: 9027672,
+    },
+  );
+
+  console.log("RESULT:", result);
+  result.wait(1, () => {
+    alert("Proposal created");
+  });
 }
 
 const convertToBlockNumber = async (targetTimestamp: any) => {
@@ -83,7 +109,10 @@ watch(
     <HeaderCard>
       <h1 class="text-7xl font-bold">Create a proposal for DAO</h1>
     </HeaderCard>
-
+    <div>
+      <h1>Proposal threshold</h1>
+      <h1>User votes</h1>
+    </div>
     <div class="p-10">
       <form @submit.prevent="">
         <b>Fill the details:</b>

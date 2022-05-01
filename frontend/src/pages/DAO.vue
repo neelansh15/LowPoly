@@ -25,7 +25,44 @@ onMounted(async () => {
   dao.value.token = await TokenContract.name();
   dao.value.tokenSymbol = await TokenContract.symbol();
 
+  const filters = await DAOContract.filters.ProposalCreated();
+  console.log("FILTERS", filters);
+  const logs = await DAOContract.queryFilter(filters, 0, "latest");
+  console.log("LOGS", logs);
+  const events = logs.map(log => DAOContract.interface.parseLog(log));
+  console.log("EVENTS:", events);
+
   proposals.value = [
+    {
+      title: "Proposal title",
+      description: "test proposal description",
+      startDate: "02/02/2022",
+      endDate: "15/02/2022",
+    },
+    {
+      title: "Proposal title",
+      description: "test proposal description",
+      startDate: "02/02/2022",
+      endDate: "15/02/2022",
+    },
+    {
+      title: "Proposal title",
+      description: "test proposal description",
+      startDate: "02/02/2022",
+      endDate: "15/02/2022",
+    },
+    {
+      title: "Proposal title",
+      description: "test proposal description",
+      startDate: "02/02/2022",
+      endDate: "15/02/2022",
+    },
+    {
+      title: "Proposal title",
+      description: "test proposal description",
+      startDate: "02/02/2022",
+      endDate: "15/02/2022",
+    },
     {
       title: "Proposal title",
       description: "test proposal description",
@@ -65,7 +102,7 @@ onMounted(async () => {
         </router-link>
       </div>
     </div>
-    <div>
+    <div class="grid-cols-2">
       <ProposalCard
         v-for="proposal in proposals"
         :key="proposal.title"
