@@ -3,7 +3,7 @@ import { parseEther } from "ethers/lib/utils";
 import { ethers } from "hardhat";
 import { Token } from "../typechain";
 // import { ethers } from "ethers";
-import "@nomiclabs/hardhat-web3";
+// import "@nomiclabs/hardhat-web3";
 
 
 describe("DAO", function () {
