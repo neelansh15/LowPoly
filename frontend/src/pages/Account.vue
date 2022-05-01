@@ -2,7 +2,11 @@
 import { onMounted, ref, reactive } from "vue";
 
 import HeaderCard from "~/components/HeaderCard.vue";
-import { useTokenFactoryContract, useTokenContract } from "~/utils/useContract";
+import {
+  useTokenFactoryContract,
+  useTokenContract,
+  useDEXContract,
+} from "~/utils/useContract";
 import DEXData from "../../../abis/DEX.json";
 import PrimaryButton from "~/components/PrimaryButton.vue";
 import { storeToRefs } from "pinia";
@@ -18,6 +22,7 @@ const dexAddress = ref(DEXData.address);
 
 onMounted(async () => {
   // getting details
+  const dexContract = useDEXContract();
   const tokenFactoryContract = useTokenFactoryContract(true);
   let tokenAddresses = await tokenFactoryContract.getTokensOf(address.value);
   for (let i in tokenAddresses) {
@@ -25,10 +30,16 @@ onMounted(async () => {
     let tokenName = await tokenContract.name();
     let balance = await tokenContract.balanceOf(address.value);
     balance = formatEther(balance.toString());
+
+    const claimableEther = +formatEther(
+      await dexContract.tokenEtherBalance(tokenAddresses[i])
+    );
+
     tokens.value.push({
       name: tokenName,
       address: tokenAddresses[i],
       balance: balance,
+      claimableEther,
     });
     isOpen.value.push(false);
   }
@@ -80,10 +91,24 @@ async function transferTokens(address: string) {
     console.log(e.message);
   }
 }
+
+async function withdrawAll(tokenAddress: string) {
+  const dexContract = useDEXContract();
+  try {
+    const result = await dexContract.withdrawAll(tokenAddress);
+
+    console.log("Withdraw_All transaction", result.hash);
+    result.wait(1).then(() => {
+      console.log("Withdraw_All transaction completed");
+    });
+  } catch (e) {
+    console.error("Error while withdrawing all", e);
+  }
+}
 </script>
 
 <template>
-  <div>
+  <div class="pb-10">
     <HeaderCard>
       <div class="flex justify-between items-end">
         <div>
@@ -97,7 +122,7 @@ async function transferTokens(address: string) {
       </div>
     </HeaderCard>
     <div class="p-5">
-      <div class="p-10">
+      <div class="p-2 mb-6">
         <b>Transfer tokens</b>
         <form action="transferTokens">
           <input
@@ -126,7 +151,7 @@ async function transferTokens(address: string) {
           </PrimaryButton>
         </form>
       </div>
-      <div class="p-10">
+      <div class="p-2 mb-6">
         <b>Delegate tokens</b>
         <form action="delegateToken">
           <input
@@ -150,71 +175,111 @@ async function transferTokens(address: string) {
           </PrimaryButton>
         </form>
       </div>
-      <h1 class="text-3xl my-3 font-bold">Tokens held by you</h1>
+      <h1 class="text-3xl my-3 font-bold">Tokens owned by you</h1>
       <div v-for="(token, i) in tokens">
-        <div class="ml-3">
-          <div class="flex items-center">
-            <h1 class="text-xl mt-2">
-              {{ i + 1 }}. {{ token.name }}: {{ token.balance }}
-            </h1>
-            <button
+        <div class="bg-primary-500 rounded-lg" style="width: fit-content">
+          <div class="py-4 px-5 flex justify-between items-center space-x-45">
+            <div>
+              <h1 class="text-sm font-bold">{{ token.name }}</h1>
+              <h2 class="text-xl font-light">{{ token.balance }}</h2>
+            </div>
+            <div>
+              <button
+                v-if="isOpen[i]"
+                class="p-3 text-xl"
+                @click="isOpen[i] = !isOpen[i]"
+              >
+                &uarr;
+              </button>
+              <button
+                v-if="!isOpen[i]"
+                class="p-3 text-xl"
+                @click="isOpen[i] = !isOpen[i]"
+              >
+                &darr;
+              </button>
+            </div>
+          </div>
+          <transition name="fadeonly" mode="in-out">
+            <div
               v-if="isOpen[i]"
-              class="ml-3"
-              @click="isOpen[i] = !isOpen[i]"
+              class="mt-2 py-4 px-5 bg-primary-700 rounded-b-lg"
             >
-              &uarr;
-            </button>
-            <button
-              v-if="!isOpen[i]"
-              class="ml-3"
-              @click="isOpen[i] = !isOpen[i]"
-            >
-              &darr;
-            </button>
-          </div>
-          <div v-if="isOpen[i]" class="p-10">
-            <b>Transfer tokens</b>
-            <form action="transferTokens">
-              <input
-                type="text"
-                v-model="transfer.address"
-                placeholder="Address"
-              />
-              <input
-                class="ml-3"
-                type="text"
-                v-model="transfer.amount"
-                placeholder="Amount"
-              />
-              <PrimaryButton
-                class="ml-3"
-                type="button"
-                @click="transferTokens(token.address)"
-              >
-                Transfer tokens
-              </PrimaryButton>
-            </form>
-          </div>
+              <div>
+                <h1 class="text-sm font-bold">Address</h1>
+                <h2 class="text-xs">{{ token.address }}</h2>
+              </div>
+              <div class="mt-2 flex justify-between items-center space-x-5">
+                <div>
+                  <h1 class="text-sm font-bold">Claimable Ether</h1>
+                  <h2 class="text-xl font-light">{{ token.claimableEther }}</h2>
+                </div>
+                <PrimaryButton @click="withdrawAll(token.address)"
+                  >Withdraw all</PrimaryButton
+                >
+              </div>
 
-          <div v-if="isOpen[i]" class="p-10">
-            <b>Delegate votes</b>
-            <form>
-              <input
-                type="text"
-                v-model="delegate.address"
-                placeholder="Address"
-              />
-              <PrimaryButton
-                class="ml-3"
-                type="button"
-                @click="delegateVotes(token.address)"
-              >
-                Delegate votes
-              </PrimaryButton>
-            </form>
-          </div>
+              <!-- <div class="p-10">
+                <b>Transfer tokens</b>
+                <form action="transferTokens">
+                  <input
+                    type="text"
+                    v-model="transfer.address"
+                    placeholder="Address"
+                  />
+                  <input
+                    class="ml-3"
+                    type="text"
+                    v-model="transfer.amount"
+                    placeholder="Amount"
+                  />
+                  <PrimaryButton
+                    class="ml-3"
+                    type="button"
+                    @click="transferTokens(token.address)"
+                  >
+                    Transfer tokens
+                  </PrimaryButton>
+                </form>
+              </div>
+
+              <div class="p-10">
+                <b>Delegate votes</b>
+                <form>
+                  <input
+                    type="text"
+                    v-model="delegate.address"
+                    placeholder="Address"
+                  />
+                  <PrimaryButton
+                    class="ml-3"
+                    type="button"
+                    @click="delegateVotes(token.address)"
+                  >
+                    Delegate votes
+                  </PrimaryButton>
+                </form>
+              </div> -->
+            </div>
+          </transition>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style>
+.fadeonly-enter-active,
+.fadeonly-leave-active {
+  transition: all 0.3s;
+}
+.fadeonly-enter-from {
+  opacity: 0;
+  transform: translateY(-2em);
+}
+
+.fadeonly-leave-to {
+  opacity: 0;
+  transform: translateY(2em);
+}
+</style>
