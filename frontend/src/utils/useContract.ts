@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import tokenData from "../../../abis/token.json";
 import tokenFactoryData from "../../../abis/tokenFactory.json";
 import DAOFactoryData from "../../../abis/daoFactory.json";
+import DAOData from "../../../abis/dao.json";
 import { useWeb3Store } from "~/store/web3Store";
 
 export function useContract(address: string, abi: any) {
@@ -12,9 +13,14 @@ export function useContract(address: string, abi: any) {
   return contract;
 }
 
-export function useTokenContract() {
-  const tokenContract = useContract(tokenData.address, tokenData.abi);
+export function useTokenContract(address: string) {
+  const tokenContract = useContract(address, tokenData.abi);
   return tokenContract;
+}
+
+export function useDAOContract(address: string) {
+  const DAOContract = useContract(address, DAOData.abi);
+  return DAOContract;
 }
 
 export function useTokenFactoryContract() {
@@ -24,6 +30,7 @@ export function useTokenFactoryContract() {
   );
   return tokenFactoryContract;
 }
+
 export function useDAOFactoryContract() {
   const DAOFactoryContract = useContract(
     DAOFactoryData.address,
