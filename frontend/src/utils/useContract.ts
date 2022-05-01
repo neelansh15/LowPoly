@@ -16,13 +16,24 @@ export function useContract(address: string, abi: any, customProvider?: any) {
   return contract;
 }
 
-export function useTokenContract(address: string) {
-  const tokenContract = useContract(address, tokenData.abi);
+export function useTokenContract(address: string, useAlchemy = false) {
+  const { alchemyProvider } = useWeb3Store();
+
+  const tokenContract = useContract(
+    address,
+    tokenData.abi,
+    useAlchemy ? alchemyProvider : null
+  );
   return tokenContract;
 }
 
-export function useDAOContract(address: string) {
-  const DAOContract = useContract(address, DAOData.abi);
+export function useDAOContract(address: string, useAlchemy = false) {
+  const { alchemyProvider } = useWeb3Store();
+  const DAOContract = useContract(
+    address,
+    DAOData.abi,
+    useAlchemy ? alchemyProvider : null
+  );
   return DAOContract;
 }
 

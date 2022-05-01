@@ -20,9 +20,9 @@ onMounted(async () => {
   const logs = await DAOFactoryContract.queryFilter(
     filters,
     26159130,
-    "latest",
+    "latest"
   );
-  const events = logs.map(log => DAOFactoryContract.interface.parseLog(log));
+  const events = logs.map((log) => DAOFactoryContract.interface.parseLog(log));
   console.log("GOT EVENTS");
   daos.value = await Promise.all(
     events.map(async (event: any) => {
@@ -32,14 +32,14 @@ onMounted(async () => {
         address: "",
       };
       let address = event.args._daoAddress;
-      const DAOContract = useDAOContract(address);
+      const DAOContract = useDAOContract(address, true);
       obj.address = address;
       obj.name = await DAOContract.name();
       console.log(obj.name);
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 500));
       obj.token = await DAOContract.tokenName();
       return obj;
-    }),
+    })
   );
 });
 </script>
