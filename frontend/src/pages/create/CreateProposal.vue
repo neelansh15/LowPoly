@@ -41,7 +41,7 @@ onMounted(async () => {
   const TokenContract = useTokenContract(tokenAddress, true);
   DAO.threshold = await DAOContract.proposalThreshold();
   let balance = await TokenContract.balanceOf(address.value);
-  const delegatedTo = await TokenContract.delegated(address);
+  const delegatedTo = await TokenContract.delegates(address.value);
   account.delegatedTo = delegatedTo;
   account.balance = formatEther(balance.toString());
 });
@@ -54,7 +54,7 @@ async function createProposal() {
   const TokenContract = useTokenContract(tokenAddress);
   const transferCalldata = TokenContract.interface.encodeFunctionData(
     "transfer",
-    [OwnerAddress, grantAmount]
+    [OwnerAddress, grantAmount],
   );
   console.log("CREATE PROPOSAL");
   let proposalDescription =
@@ -67,7 +67,7 @@ async function createProposal() {
     proposalDescription,
     {
       gasLimit: 9027672,
-    }
+    },
   );
 
   console.log("RESULT:", result);
