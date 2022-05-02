@@ -26,6 +26,7 @@ const DAOaddress = route.params.address as string;
 
 const account = reactive({
   balance: "",
+  delegatedTo: "",
 });
 const DAO = reactive({
   threshold: "",
@@ -40,6 +41,8 @@ onMounted(async () => {
   const TokenContract = useTokenContract(tokenAddress, true);
   DAO.threshold = await DAOContract.proposalThreshold();
   let balance = await TokenContract.balanceOf(address.value);
+  const delegatedTo = await TokenContract.delegated(address);
+  account.delegatedTo = delegatedTo;
   account.balance = formatEther(balance.toString());
 });
 
@@ -137,17 +140,26 @@ async function createProposal() {
     <HeaderCard>
       <h1 class="text-7xl font-bold">Create a proposal for {{ DAO.name }}</h1>
     </HeaderCard>
-    <div class="m-6 p-5 bg-dark-100 w-auto inline-block rounded-lg inline-flex space-x-5 items-center">
+    <div
+      class="m-6 p-5 bg-dark-100 w-auto inline-block rounded-lg inline-flex space-x-5 items-center"
+    >
       <div>
         <h5 class="text-sm">Proposal threshold</h5>
         <h2 class="text-2xl font-light">{{ DAO.threshold }}</h2>
       </div>
-       <div>
+      <div>
         <h5 class="text-sm">Your balance</h5>
         <h2 class="text-2xl">{{ account.balance }}</h2>
       </div>
+      <div>
+        <h5 class="text-sm">Delegated To</h5>
+        <h2 class="text-2xl">{{ account.delegatedTo }}</h2>
+      </div>
     </div>
-    <div class="mx-6 my-3 p-5 bg-dark-100 rounded-lg" style="width: fit-content">
+    <div
+      class="mx-6 my-3 p-5 bg-dark-100 rounded-lg"
+      style="width: fit-content"
+    >
       <form @submit.prevent="createProposal">
         <b>Create proposal</b>
         <br />
