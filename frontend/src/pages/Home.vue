@@ -18,7 +18,7 @@ onMounted(async () => {
   const DAOFactoryContract = useDAOFactoryContract(true);
   // const startBlock = (await DAOFactoryContract.startBlock()).toString();
   // console.log("startBlock", startBlock);
-  const filters = await DAOFactoryContract.filters.NewDAO();
+  const filters = await DAOFactoryContract.filters.NewDao();
   console.log(filters);
   const logs = await DAOFactoryContract.queryFilter(
     filters,
