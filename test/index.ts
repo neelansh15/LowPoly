@@ -5,7 +5,6 @@ import { Token } from "../typechain";
 // import { ethers } from "ethers";
 // import "@nomiclabs/hardhat-web3";
 
-
 // describe("DAO", function () {
 //   it("Should deploy", async function () {
 //     const Token = await ethers.getContractFactory("Token");
@@ -55,12 +54,11 @@ describe("Token", async function () {
     await token1.transfer(accountx.address, 100);
     console.log(await token1.getVotes(accountx.address));
     console.log(await token1.balanceOf(accountx.address));
-});
+  });
 });
 
 describe("Creating and Executing Proposals", async function () {
   it("Get proposal id", async function () {
-
     const Token = await ethers.getContractFactory("Token");
     const name = "TestToken";
     const symbol = "TT";
@@ -73,7 +71,7 @@ describe("Creating and Executing Proposals", async function () {
     await token1.connect(owner).delegate(owner.address);
     const DAO = await ethers.getContractFactory("DAO");
     console.log("token address", token2.address);
-    const DAO1 = await DAO.deploy("Devs4shah", token2.address);
+    const DAO1 = await DAO.deploy("Devs4shah", "parthshahbest", token2.address);
     await DAO1.deployed();
 
     const OwnerAddress = owner.address;
@@ -91,7 +89,7 @@ describe("Creating and Executing Proposals", async function () {
         "Proposal #1: Give grant to team"
       )
     );
-  })
+  });
 
   it("Cast a vote to a proposal", async function () {
     const Token = await ethers.getContractFactory("Token");
@@ -103,10 +101,10 @@ describe("Creating and Executing Proposals", async function () {
 
     const tokenAddress = token1.address;
     const token2 = await ethers.getContractAt("ERC20", tokenAddress);
-    
+
     const DAO = await ethers.getContractFactory("DAO");
     console.log("token address", token2.address);
-    const DAO1 = await DAO.deploy("Devs4shah", token2.address);
+    const DAO1 = await DAO.deploy("Devs4shah", "parthshahbest", token2.address);
     await DAO1.deployed();
 
     const OwnerAddress = owner.address;
@@ -126,13 +124,12 @@ describe("Creating and Executing Proposals", async function () {
     );
     console.log("Proposal id", pid);
     await token1.transfer(account1.address, 100);
-    
-    
-    console.log("Owner tokens",await token1.balanceOf(owner.address));
-    console.log("Account1 tokens",await token1.balanceOf(account1.address));
+
+    console.log("Owner tokens", await token1.balanceOf(owner.address));
+    console.log("Account1 tokens", await token1.balanceOf(account1.address));
     await token1.connect(account1).delegate(account1.address);
     console.log("account1 votes", await token1.getVotes(account1.address));
-   
+
     console.log(
       "Cast vote",
       await DAO1.castVote(
@@ -141,7 +138,7 @@ describe("Creating and Executing Proposals", async function () {
         ),
         0
       )
-    ); 
+    );
 
     console.log(
       "This is my proposal votes",
@@ -168,7 +165,7 @@ describe("Creating and Executing Proposals", async function () {
         ),
         1
       )
-    ); 
+    );
 
     console.log(
       "This is my proposal votes",
@@ -179,11 +176,7 @@ describe("Creating and Executing Proposals", async function () {
       )
     );
 
-
     // await token1.connect(owner).delegate(account1.address);
     // console.log("Voting period", await DAO1.votingDelay());
-  
-  })
-
-
-})
+  });
+});
