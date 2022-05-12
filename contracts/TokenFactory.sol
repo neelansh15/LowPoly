@@ -14,12 +14,12 @@ contract TokenFactory {
         string memory name,
         string memory symbol,
         uint256 totalSupply
-    ) public returns (Token) {
+    ) public returns (address) {
         Token token = new Token(name, symbol, totalSupply, msg.sender);
         _tokens[msg.sender].push(address(token));
         token.transferOwnership(msg.sender);
         emit NewToken(address(token), name, symbol);
-        return token;
+        return address(token);
     }
 
     function getTokensOf(address _address)
