@@ -8,7 +8,7 @@ contract DAOFactory {
     mapping(address => address[]) public _daos;
     uint256 public startBlock;
 
-    event NewDao(string name, address _daoAddress, address _tokenAddress);
+    event NewDao(string name, address indexed _daoAddress, address indexed _tokenAddress);
 
     constructor() {
         startBlock = block.number;
