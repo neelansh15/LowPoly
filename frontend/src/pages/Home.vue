@@ -38,6 +38,9 @@ onMounted(async () => {
       console.log(obj.name);
       await new Promise((r) => setTimeout(r, 500));
       obj.token = await DAOContract.tokenName();
+
+      console.log("daos obj", obj);
+
       return obj;
     })
   );

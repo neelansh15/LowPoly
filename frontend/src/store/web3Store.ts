@@ -7,7 +7,10 @@ export const useWeb3Store = defineStore("web3", {
       chainId: null as number | null,
       address: null as string | null,
       web3provider: null as ethers.providers.Web3Provider | null,
-      alchemyProvider: null as ethers.providers.AlchemyProvider | null,
+      alchemyProvider: null as
+        | ethers.providers.AlchemyProvider
+        | ethers.providers.AlchemyProvider
+        | null,
     };
   },
 
@@ -30,7 +33,12 @@ export const useWeb3Store = defineStore("web3", {
     setWeb3provider(provider: ethers.providers.Web3Provider | null) {
       this.web3provider = provider;
     },
-    setAlchemyprovider(provider: ethers.providers.AlchemyProvider | null) {
+    setAlchemyprovider(
+      provider:
+        | ethers.providers.AlchemyProvider
+        | ethers.providers.JsonRpcProvider
+        | null
+    ) {
       this.alchemyProvider = provider;
     },
   },

@@ -9,25 +9,37 @@ const walletConnected = ref(false);
 // const chainId = ref(0);
 
 const { address, chainId, web3provider } = storeToRefs(useWeb3Store());
+
 const { setAlchemyprovider } = useWeb3Store();
 const init = async () => {
-  const provider = window.ethereum;
+  try {
+    const provider = window.ethereum;
 
-  const permissions = await provider.request({
-    method: "wallet_getPermissions",
-  });
-  if (
-    permissions.length > 0 &&
-    permissions[0].parentCapability === "eth_accounts"
-  ) {
-    connectWallet();
+    const permissions = await provider.request({
+      method: "wallet_getPermissions",
+    });
+    if (
+      permissions.length > 0 &&
+      permissions[0].parentCapability === "eth_accounts"
+    ) {
+      connectWallet();
+    }
+
+    // const alchemyProvider = new ethers.providers.AlchemyProvider(
+    //   "rinkeby",
+    //   "hRZxy9psSSQ5X93BN9QKwEwFMk4QxPKn"
+    // );
+    const alchemyProvider = new ethers.providers.JsonRpcProvider(
+      "https://eth-rinkeby.alchemyapi.io/v2/hRZxy9psSSQ5X93BN9QKwEwFMk4QxPKn",
+      "rinkeby"
+    );
+
+    console.log({ alchemyProvider });
+    await alchemyProvider.ready;
+    setAlchemyprovider(alchemyProvider);
+  } catch (e) {
+    console.error(e);
   }
-
-  const alchemyProvider = new ethers.providers.AlchemyProvider(
-    "maticmum",
-    "fWVG_3ipWJMJsAe6kQm3Hx9HsAUBHJxN"
-  );
-  setAlchemyprovider(alchemyProvider);
 };
 onMounted(init);
 
@@ -81,8 +93,15 @@ async function connectWallet() {
 </script>
 
 <template>
-  <div v-if="walletConnected && address" class="bg-white text-primary-500 rounded-lg px-2.5 py-1.5 text-xs">
-    {{ address.slice(0, 6) + "..." + address.slice(address.length - 6, address.length) }}
+  <div
+    v-if="walletConnected && address"
+    class="bg-white text-primary-500 rounded-lg px-2.5 py-1.5 text-xs"
+  >
+    {{
+      address.slice(0, 6) +
+      "..." +
+      address.slice(address.length - 6, address.length)
+    }}
   </div>
   <div v-else>
     <button @click="connectWallet">Connect to Wallet</button>
