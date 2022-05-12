@@ -1,46 +1,91 @@
 <template>
-  <div class="m-5 p-2 bg-primary-600 text-white h-60 min-w-30 w-sm">
-    <div class="text-right mt-0">
-      <h1>
-        {{ proposal.status }}
+  <div
+    class="m-5 from-primary-400 to-primary-600 bg-gradient-to-b text-white rounded-lg"
+  >
+    <div class="p-5">
+      <div class="flex justify-end">
+        <p
+          style="width: fit-content"
+          class="ml-3 text-sm bg-white text-primary-600 px-2 py-1 rounded-lg"
+        >
+          {{ proposal.status }}
+        </p>
+      </div>
+      <h1 class="text-3xl text-center font-bold">
+        <slot name="title"> </slot>
       </h1>
-    </div>
-    <h1 class="text-3xl text-center font-bold">
-      <slot name="title"> </slot>
-    </h1>
-    <p class="text-xl text-center">
-      <slot name="description"></slot>
-    </p>
-    <div class="mt-3 flex justify-between items-center">
-      <p class="text-center">
-        <slot name="startDate"></slot>
+      <p class="text-xl text-center">
+        <slot name="description"></slot>
       </p>
-      <p class="text-center">
-        <slot name="endDate"></slot>
-      </p>
-    </div>
+      <div class="mt-3 flex justify-between items-center">
+        <p class="text-center">
+          <slot name="startDate"></slot>
+        </p>
+        <p class="text-center">
+          <slot name="endDate"></slot>
+        </p>
+      </div>
 
-    <div class="mt-3 mx-5 flex justify-between items-center">
-      <h1>Against</h1>
-      <h1>For</h1>
-      <h1>Abstain</h1>
-    </div>
-    <div class="mt-3 mx-10 flex justify-between items-center">
-      <h1>{{ proposal.against }}</h1>
-      <h1>{{ proposal.for }}</h1>
-      <h1>{{ proposal.abstained }}</h1>
-    </div>
-    <div v-if="proposal.hasVoted" class="mt-3 text-center">
-      <h1>Already Voted</h1>
+      <!-- <div class="mt-3 mx-5 flex justify-between items-center">
+        <h1>Against</h1>
+        <h1>For</h1>
+        <h1>Abstain</h1>
+      </div> -->
+      <div
+        class="mt-3 mx-10 text-2xl font-bold flex justify-between items-center"
+      >
+        <div>
+          <h1 class="text-sm font-bold">Against</h1>
+          <h2 class="text-xl font-lighttext-xl font-light">
+            {{ proposal.against }}
+          </h2>
+        </div>
+        <div>
+          <h1 class="text-sm font-bold">For</h1>
+          <h2 class="text-xl font-lighttext-xl font-light">
+            {{ proposal.for }}
+          </h2>
+        </div>
+        <div>
+          <h1 class="text-sm font-bold">Abstain</h1>
+          <h2 class="text-xl font-lighttext-xl font-light">
+            {{ proposal.abstained }}
+          </h2>
+        </div>
+      </div>
     </div>
     <div
-      v-else
-      v-if="stateIndex < 2 && userBalance > 0"
-      class="mt-3 mx-4 flex justify-between items-center"
+      v-if="proposal.hasVoted"
+      class="mt-3 flex justify-between items-center"
     >
-      <SecondaryButton @click="castVote(0)">Against</SecondaryButton>
-      <SecondaryButton @click="castVote(1)">For</SecondaryButton>
-      <SecondaryButton @click="castVote(2)">Abstain</SecondaryButton>
+      <h1
+        class="bg-white p-3 text-primary-500 w-full border-r-3 border-gray-100 rounded-b-lg transition text-center"
+      >
+        Already Voted
+      </h1>
+    </div>
+    <div
+      v-else-if="stateIndex < 2 && userBalance > 0"
+      class="mt-3 flex justify-between items-center"
+    >
+      <button
+        class="bg-white p-3 text-primary-500 w-full border-r-3 border-gray-100 rounded-bl-lg hover:(bg-primary-600 text-white) transition"
+        @click="castVote(0)"
+      >
+        Against
+      </button>
+      <button
+        class="bg-white p-3 hover:(bg-primary-600 text-white) text-primary-500 w-full border-r-3 border-gray-100"
+        @click="castVote(1)"
+      >
+        For
+      </button>
+      <button
+        class="bg-white p-3 hover:(bg-primary-600 text-white) text-primary-500 rounded-br-lg w-full"
+        @click="castVote(2)"
+      >
+        Abstain
+      </button>
     </div>
   </div>
 </template>
