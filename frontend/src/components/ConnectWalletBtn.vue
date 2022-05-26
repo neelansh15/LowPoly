@@ -31,7 +31,7 @@ const init = async () => {
     // );
     const alchemyProvider = new ethers.providers.JsonRpcProvider(
       "https://eth-rinkeby.alchemyapi.io/v2/hRZxy9psSSQ5X93BN9QKwEwFMk4QxPKn",
-      "rinkeby"
+      "rinkeby",
     );
 
     console.log({ alchemyProvider });
@@ -65,6 +65,7 @@ async function connectWallet() {
     } else {
       wallet.setAddress(accounts[0]);
     }
+    location.reload();
   }
 
   provider.on("accountsChanged", accountsChanged);
@@ -73,6 +74,7 @@ async function connectWallet() {
     newChainId = newChainId.split("x")[1];
     wallet.setChainId(parseInt(newChainId));
     console.log({ changedChain: chainId });
+    location.reload();
   }
   provider.on("chainChanged", chainChanged);
 
@@ -82,6 +84,7 @@ async function connectWallet() {
     provider.removeListener("accountsChanged", accountsChanged);
     provider.removeListener("disconnect", disconnect);
     provider.removeListener("chainChanged", chainChanged);
+    location.reload();
   }
 
   provider.on("disconnect", disconnect);
