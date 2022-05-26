@@ -47,6 +47,10 @@ onMounted(async () => {
 });
 
 async function createProposal() {
+  if (DAO.threshold > account.balance) {
+    alert("Insufficient funds");
+    return;
+  }
   const OwnerAddress = address.value;
   const grantAmount = 0;
   const DAOContract = useDAOContract(DAOaddress);
