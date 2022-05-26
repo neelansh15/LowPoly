@@ -126,8 +126,9 @@ const castVote = async (val: number) => {
     gasLimit: 9023640,
   });
   console.log(result);
-  result.wait(1, async () => {
-    alert("casted vote");
+  result.wait(1).then(() => {
+    alert("Casted vote successfully");
+    location.reload();
   });
 };
 

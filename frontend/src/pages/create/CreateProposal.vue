@@ -71,7 +71,7 @@ async function createProposal() {
   );
 
   console.log("RESULT:", result);
-  result.wait(1, () => {
+  result.wait(1).then(() => {
     console.log("Proposal created");
     alert("Proposal created");
     router.push(`/dao/${DAOaddress}`);

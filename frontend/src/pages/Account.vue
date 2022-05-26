@@ -39,11 +39,11 @@ const init = async () => {
     balance = formatEther(balance.toString());
 
     const claimableEther = +formatEther(
-      await dexContract.tokenEtherBalance(tokenAddresses[i])
+      await dexContract.tokenEtherBalance(tokenAddresses[i]),
     );
 
     const dexBalance = +formatEther(
-      await tokenContract.balanceOf(dexAddress.value)
+      await tokenContract.balanceOf(dexAddress.value),
     );
 
     tokens.value.push({
@@ -58,13 +58,12 @@ const init = async () => {
   }
 };
 
-const token = reactive({
-  address: "",
-});
 const delegate = reactive({
+  token: "",
   address: "",
 });
 const transfer = reactive({
+  token: "",
   address: "",
   amount: "",
 });
@@ -94,7 +93,7 @@ async function transferTokens(address: string) {
         ethers.utils.parseEther(transfer.amount.toString()),
         {
           gasLimit: 9023256,
-        }
+        },
       );
       result.wait(1, () => {
         alert("Transferred tokens");
@@ -140,7 +139,7 @@ async function withdrawAll(tokenAddress: string) {
         <form class="mt-1" action="transferTokens">
           <input
             type="text"
-            v-model="token.address"
+            v-model="transfer.token"
             placeholder="Token address"
           />
           <input
@@ -169,7 +168,7 @@ async function withdrawAll(tokenAddress: string) {
         <form class="mt-1" action="delegateToken">
           <input
             type="text"
-            v-model="token.address"
+            v-model="delegate.token"
             placeholder="Token address"
           />
           <input

@@ -50,10 +50,10 @@ onMounted(async () => {
   dao.value.tokenSymbol = await TokenContract.symbol();
 
   const filters = await DAOContract.filters.ProposalCreated();
-  const logs = await DAOContract.queryFilter(filters, 26078840, "latest");
-  const events = logs.map(log => DAOContract.interface.parseLog(log));
+  const logs = await DAOContract.queryFilter(filters);
+  const events = logs.map((log: any) => DAOContract.interface.parseLog(log));
   console.log("EVENTS:", events);
-  proposals.value = events.map(e => {
+  proposals.value = events.map((e: any) => {
     let obj = {
       title: e.args.description.split("$$")[0],
       description: e.args.description.split("$$")[1].substring(0, 50),
