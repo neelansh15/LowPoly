@@ -76,8 +76,9 @@ async function delegateVotes(address: string) {
       const result = await tokenContract.delegate(delegate.address, {
         gasLimit: 9022680,
       });
-      result.wait(1, () => {
+      result.wait(1).then(() => {
         alert("Votes have been delegated");
+        location.reload();
       });
     }
   } catch (e: any) {
@@ -95,8 +96,9 @@ async function transferTokens(address: string) {
           gasLimit: 9023256,
         },
       );
-      result.wait(1, () => {
+      result.wait(1).then(() => {
         alert("Transferred tokens");
+        location.reload();
       });
     }
   } catch (e: any) {
@@ -157,7 +159,7 @@ async function withdrawAll(tokenAddress: string) {
           <PrimaryButton
             class="ml-3"
             type="button"
-            @click="transferTokens(token.address)"
+            @click="transferTokens(transfer.token)"
           >
             Transfer tokens
           </PrimaryButton>
@@ -181,7 +183,7 @@ async function withdrawAll(tokenAddress: string) {
           <PrimaryButton
             class="ml-3"
             type="button"
-            @click="delegateVotes(token.address)"
+            @click="delegateVotes(delegate.token)"
           >
             Delegate
           </PrimaryButton>
