@@ -4,7 +4,6 @@ import Home from "../pages/Home.vue";
 import CreateDAO from "../pages/create/CreateDAO.vue";
 import CreateToken from "../pages/create/CreateToken.vue";
 import CreateProposal from "../pages/create/CreateProposal.vue";
-import ManageDAO from "../pages/ManageDAO.vue";
 import DAO from "../pages/DAO.vue";
 import Account from "../pages/Account.vue";
 
@@ -28,10 +27,6 @@ const routes = [
   {
     component: CreateProposal,
     path: "/create/proposal/:address",
-  },
-  {
-    component: ManageDAO,
-    path: "/dao/manage",
   },
   {
     component: DAO,

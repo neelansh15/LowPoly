@@ -39,7 +39,7 @@ export const useWeb3Store = defineStore("web3", {
         | ethers.providers.JsonRpcProvider
         | null
     ) {
-      this.alchemyProvider = provider;
+      this.alchemyProvider = provider as any;
     },
   },
 });
